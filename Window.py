@@ -20,10 +20,7 @@ class Window:
         
         self.childWindows = []
         self.parentWindow = None
-    
-
-
-        
+     
     def addChildWindow(self, window):
         self.childWindows.append(window.identifier)
         window.parentWindow = self
@@ -36,24 +33,7 @@ class Window:
         return None
     
     def hitTest(self, x, y):
-        return False
-    
-    # def convertPositionToScreen(self, x, y):
-        
-    #     # If this window has no parent, it is already at global screen coordinates
-    #     if self.parentWindow is None :
-    #         return (self.x + x, self.y + y)
-        
-    #     # If this window has a parent, recursively convert local coordinates to screen coordinates
-    #     else :
-    #         parentWindow = self.parentWindow
-
-            
-    #         parentX = x+ self.originX - parentWindow.originX
-    #         parentY = y+ self.originY - parentWindow.originY
-    #         return parentWindow.convertPositionToScreen(self,parentX,parentY)
-
-    #     return (0,0)
+        return False)
     
     def convertPositionToScreen(self, x, y):
         if self.parentWindow is not None:
