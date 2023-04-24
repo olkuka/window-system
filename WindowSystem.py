@@ -13,6 +13,7 @@ from Window import *
 class WindowSystem(GraphicsEventSystem):
     def start(self):
         screen = Screen(self)
+        
     # why start method instead of __init__?
     # def __init__(self):
     #     self.screen = Screen(self)
