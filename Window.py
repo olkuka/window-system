@@ -22,11 +22,11 @@ class Window:
         self.parentWindow = None
      
     def addChildWindow(self, window):
-        self.childWindows.append(window.identifier)
+        self.childWindows.append(window)
         window.parentWindow = self
         
     def removeFromParentWindow(self):
-        self.parentWindow.childWindows.remove(self.identifier)
+        self.parentWindow.childWindows.remove(self)
         self.parentWindow = None
         
     def childWindowAtLocation(self, x, y):
@@ -55,7 +55,13 @@ class Window:
     
     
     def draw(self, ctx):
-        pass
+         # Draw the window's background color
+        ctx.setFillColor(self.backgroundColor)
+        ctx.fillRect(0, 0, self.width, self.height)
+        
+        # Draw any child windows
+        for child in self.childWindows:
+            child.draw(ctx)
     
     
     
