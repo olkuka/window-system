@@ -13,6 +13,7 @@ from Window import *
 class WindowSystem(GraphicsEventSystem):
     def start(self):
         screen = Screen(self)
+       
         
     # why start method instead of __init__?
     # def __init__(self):
@@ -38,7 +39,7 @@ class WindowSystem(GraphicsEventSystem):
     """
     
     def handlePaint(self):
-        pass
+        self.graphicsContext.fillRect(0, 0, 100, 100)
     
     
     """
@@ -66,3 +67,4 @@ class WindowSystem(GraphicsEventSystem):
     
 # Let's start your window system!
 w = WindowSystem(800,600)
+w.handlePaint()
