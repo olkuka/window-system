@@ -10,6 +10,7 @@ and Student Name 2 (#999999)
 from GraphicsEventSystem import *
 from Window import *
 
+
 class WindowSystem(GraphicsEventSystem):
     def start(self):
         self.screen = Screen(self)
@@ -22,21 +23,25 @@ class WindowSystem(GraphicsEventSystem):
     """
     WINDOW MANAGEMENT
     """
-        
+
     def createWindowOnScreen(self, x, y, width, height, identifier):
         window = Window(x, y, width, height, identifier)
         self.screen.addChildWindow(window)
         return window
-    
-    def bringWindowToFront(self, window):
-        pass
 
-    
-    
+    def bringWindowToFront(self, window):
+        currWindow = window
+        while currWindow not in self.screen.childWindows and currWindow != self.screen:
+            currWindow = currWindow.parentWindow
+
+        if currWindow != self.screen:
+            currWindow.removeFromParentWindow()
+            self.screen.addChildWindow(currWindow)
+
     """
     DRAWING
     """
-    
+
     def handlePaint(self):
         
         self.graphicsContext.setFillColor(COLOR_BLACK)
@@ -49,19 +54,19 @@ class WindowSystem(GraphicsEventSystem):
     """
     INPUT EVENTS
     """
-    
+
     def handleMousePressed(self, x, y):
         pass
-        
+
     def handleMouseReleased(self, x, y):
         pass
-        
+
     def handleMouseMoved(self, x, y):
         pass
-        
+
     def handleMouseDragged(self, x, y):
         pass
-        
+
     def handleKeyPressed(self, char):
         pass
         
