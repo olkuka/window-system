@@ -38,8 +38,9 @@ class WindowSystem(GraphicsEventSystem):
     """
 
     def handlePaint(self):
-        pass
-
+        self.graphicsContext.fillRect(0, 0, 100, 100)
+    
+    
     """
     INPUT EVENTS
     """
@@ -62,18 +63,4 @@ class WindowSystem(GraphicsEventSystem):
 
 # Let's start your window system!
 w = WindowSystem(800, 600)
-w.start()
-w.createWindowOnScreen(0, 0, 200, 200, 'test_window')
-
-w2 = Window(0, 0, 100, 100, 'child_of_test_window')
-w.screen.childWindows[0].addChildWindow(w2)
-print(w.screen.childWindows[0].childWindows[0].identifier)
-
-w.createWindowOnScreen(0, 0, 150, 150, 'test_window_2')
-
-# test_window_2 should be a top-level window (last on the list)
-print(w.screen.childWindows[1].identifier)
-# bring test_window to the front
-w.bringWindowToFront(w.screen.childWindows[0])
-# test_window should be a top-level window (last on the list)
-print(w.screen.childWindows[1].identifier)
+w.handlePaint()
