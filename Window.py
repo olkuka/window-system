@@ -22,11 +22,11 @@ class Window:
         self.parentWindow = None
      
     def addChildWindow(self, window):
-        self.childWindows.append(window.identifier)
+        self.childWindows.append(window)
         window.parentWindow = self
         
     def removeFromParentWindow(self):
-        self.parentWindow.childWindows.remove(self.identifier)
+        self.parentWindow.childWindows.remove(self)
         self.parentWindow = None
         
     def childWindowAtLocation(self, x, y):
