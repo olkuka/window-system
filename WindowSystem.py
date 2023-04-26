@@ -17,9 +17,6 @@ class WindowSystem(GraphicsEventSystem):
        
         s2 = self.createWindowOnScreen(10,10,100,100,"SCREEN_2")
         s2.backgroundColor = COLOR_BLUE        
-    # why start method instead of __init__?
-    # def __init__(self):
-    #     self.screen = Screen(self)
     
     """
     WINDOW MANAGEMENT
