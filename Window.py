@@ -16,8 +16,8 @@ class Window:
         self.width = width
         self.height = height
         self.identifier = identifier
-        self.backgroundColor = COLOR_LIGHT_GRAY
         
+        self.backgroundColor = COLOR_LIGHT_GRAY
         self.childWindows = []
         self.parentWindow = None
      
@@ -57,7 +57,7 @@ class Window:
     def draw(self, ctx):
          # Draw the window's background color
         ctx.setFillColor(self.backgroundColor)
-        ctx.fillRect(0, 0, self.width, self.height)
+        ctx.fillRect(self.x,self.y,self.x+ self.width, self.y+self.height)
         
         # Draw any child windows
         for child in self.childWindows:

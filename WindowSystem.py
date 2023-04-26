@@ -14,8 +14,9 @@ from Window import *
 class WindowSystem(GraphicsEventSystem):
     def start(self):
         self.screen = Screen(self)
-        self.createWindowOnScreen(10,10,100,100,"2")
-        
+       
+        s2 = self.createWindowOnScreen(10,10,100,100,"SCREEN_2")
+        s2.backgroundColor = COLOR_BLUE        
     # why start method instead of __init__?
     # def __init__(self):
     #     self.screen = Screen(self)
@@ -44,11 +45,11 @@ class WindowSystem(GraphicsEventSystem):
 
     def handlePaint(self):
         
-        self.graphicsContext.setFillColor(COLOR_BLACK)
-        self.graphicsContext.fillRect(0, 0, self.width, self.height)
+        #self.graphicsContext.setFillColor(COLOR_WHITE)
+        #self.graphicsContext.fillRect(0, 0, self.width, self.height)
 
         # Draw the screen and all its child windows
-        #self.screen.draw(self.graphicsContext)
+        self.screen.draw(self.graphicsContext)
         
     
     """
