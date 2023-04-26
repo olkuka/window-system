@@ -33,7 +33,7 @@ class Window:
         return None
     
     def hitTest(self, x, y):
-        return False
+        return x < self.width and y < self.height
     
     def convertPositionToScreen(self, x, y):
         if self.parentWindow is not None:
