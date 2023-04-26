@@ -30,10 +30,25 @@ class Window:
         self.parentWindow = None
         
     def childWindowAtLocation(self, x, y):
-        return None
+        # if the window has no children, return None
+        topMostWindow = None
+
+        if self.childWindows:
+            # iterate through child windows, from the bottom to the top
+            for childWindow in self.childWindows:
+                # check if position is within a given child window
+                # before, convert x and y to the local coordination system of the child window
+                if childWindow.hitTest(x - childWindow.x, y - childWindow.y):
+                    # if position is within a given child window, assign window to the variable
+                    topMostWindow = childWindow
+        # return a topmost found child window or None if no window exists             
+        return topMostWindow
     
     def hitTest(self, x, y):
-        return x < self.width and y < self.height
+        # if x and y are in a local coordinate system
+        # it's sufficient to check if x and y are within bounds 
+        # [0, width] and [0, height] of the current window 
+        return x <= self.width and y <= self.height
     
     def convertPositionToScreen(self, x, y):
         if self.parentWindow is not None:

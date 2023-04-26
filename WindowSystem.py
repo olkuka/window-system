@@ -16,7 +16,7 @@ class WindowSystem(GraphicsEventSystem):
         self.screen = Screen(self)
        
         s2 = self.createWindowOnScreen(10,10,100,100,"SCREEN_2")
-        s2.backgroundColor = COLOR_BLUE        
+        s2.backgroundColor = COLOR_BLUE    
     
     """
     WINDOW MANAGEMENT
