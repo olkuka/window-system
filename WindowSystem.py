@@ -54,7 +54,12 @@ class WindowSystem(GraphicsEventSystem):
     """
 
     def handleMousePressed(self, x, y):
-        pass
+        # check the window at the given location
+        windowPressed = self.screen.childWindowAtLocation(x, y)
+        # if there exists a window in a given location
+        if windowPressed:
+            # bring it to the front
+            self.bringWindowToFront(windowPressed)
 
     def handleMouseReleased(self, x, y):
         pass
