@@ -22,54 +22,85 @@ class Window:
         self.parentWindow = None
      
     def addChildWindow(self, window):
+        # add window to the end of childWindows list
         self.childWindows.append(window)
+        # assign window parent
         window.parentWindow = self
         
     def removeFromParentWindow(self):
+        # remove window from the childWindows list
         self.parentWindow.childWindows.remove(self)
+        # set window parent to None
         self.parentWindow = None
         
     def childWindowAtLocation(self, x, y):
-        return None
-    
+        # check if the current window contains the provided point
+        if self.hitTest(x, y):
+            # search for child windows in reverse order (topmost to bottommost)
+            for child in reversed(self.childWindows):
+                # convert the local coordinates to the child window's coordinate system
+                childX = x - child.x
+                childY = y - child.y
+                # recursively check child windows
+                result = child.childWindowAtLocation(childX, childY)
+                # return the topmost child window found
+                if result:
+                    return result 
+            # if no child window is found, return the current window
+            return self
+        else:
+            return None
+
     def hitTest(self, x, y):
-        return False
+        # if x and y are in a local coordinate system
+        # it's sufficient to check if x and y are within bounds 
+        # [0, width] and [0, height] of the current window 
+        return 0 <= x <= self.width and 0 <= y <= self.height
     
     def convertPositionToScreen(self, x, y):
-        if self.parentWindow is not None:
-            # If this window has a parent, recursively convert local coordinates to screen coordinates
-            screenX, screenY = self.parentWindow.convertPositionToScreen(self.x, self.y)
-            return screenX + x, screenY + y
-        else:
-            # If this window has no parent, it is already at global screen coordinates
-            return self.x + x, self.y + y
+        localX = x
+        localY = y
+        # if this window has no parent, it is already at global screen coordinates
+        if not self.parentWindow:
+            return localX, localY
+        
+        # if this window has a parent, recursively convert local coordinates to screen coordinates
+        else :
+            parentX = localX + self.x 
+            parentY = localY + self.y
+            return self.parentWindow.convertPositionToScreen(parentX, parentY) 
     
     def convertPositionFromScreen(self, x, y):
-        if self.parentWindow is not None:
-            # If this window has a parent, convert screen coordinates to parent coordinates
-            parentX, parentY = self.parentWindow.convertPositionFromScreen(x, y)
-            return parentX - self.x, parentY - self.y
-        else:
-            # If this window has no parent, it is already at global screen coordinates, so just subtract its position from the screen coordinates
-            return x - self.x, y - self.y
-    
-    
-    def draw(self, ctx):
-         # Draw the window's background color
-        ctx.setFillColor(self.backgroundColor)
-        ctx.fillRect(self.x,self.y,self.x+ self.width, self.y+self.height)
+        # if this window has no parent, return its coordinates as they are
+        if not self.parentWindow:
+            return (x, y)
         
-        # Draw any child windows
+        # if this window has a parent, recursively convert screen coordinates to local coordinates
+        else:
+            localX = x - self.x
+            localY = y - self.y
+            return self.parentWindow.convertPositionFromScreen(localX, localY)
+        
+    def draw(self, ctx):
+        # draw the window's background color
+        ctx.setFillColor(self.backgroundColor)
+
+        if self.parentWindow: 
+            screenX, screenY = self.parentWindow.convertPositionToScreen(self.x, self.y)
+        else:
+            screenX = self.x
+            screenY = self.y
+        
+        ctx.setOrigin(screenX, screenY)
+        ctx.fillRect(0,0,self.width, self.height)
+
+        # draw every child window
         for child in self.childWindows:
             child.draw(ctx)
-    
-    
     
     def handleMouseClicked(self, x, y):
         print("Window " + self.identifier + " was clicked.")
         
-
-
 
 class Screen(Window):
     def __init__(self, windowSystem):
