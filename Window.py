@@ -3,8 +3,8 @@
 
 """
 Window System - Submission
-by  Student Name 1 (#999999)
-and Student Name 2 (#999999)
+by  Aleksandra Kukawka (#448975)
+and Daso Jung (#446806)
 """
 
 from GraphicsEventSystem import *
@@ -82,17 +82,23 @@ class Window:
             return self.parentWindow.convertPositionFromScreen(localX, localY)
         
     def draw(self, ctx):
-        # draw the window's background color
+        # set to draw with the window's background color
         ctx.setFillColor(self.backgroundColor)
-
-        if self.parentWindow: 
+        
+        # Check if the window has a parent
+        if self.parentWindow:
+            # Convert the window's local origin to global coordinates
             screenX, screenY = self.parentWindow.convertPositionToScreen(self.x, self.y)
         else:
+            # If the window has no parent, its origin is already in global coordinates
             screenX = self.x
             screenY = self.y
-        
+
+        # Set the graphics context's origin to the global coordinates
         ctx.setOrigin(screenX, screenY)
-        ctx.fillRect(0,0,self.width, self.height)
+
+        # Draw a filled rectangle in the window's local coordinate system
+        ctx.fillRect(0, 0, self.width, self.height)
 
         # draw every child window
         for child in self.childWindows:

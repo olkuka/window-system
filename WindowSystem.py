@@ -3,8 +3,8 @@
 
 """
 Window System - Submission
-by  Student Name 1 (#999999)
-and Student Name 2 (#999999)
+by  Aleksandra Kukawka (#448975)
+and Daso Jung (#446806)
 """
 
 from GraphicsEventSystem import *
@@ -14,28 +14,6 @@ from Window import *
 class WindowSystem(GraphicsEventSystem):
     def start(self):
         self.screen = Screen(self)
-       
-        # add some windows to test
-        s2 = self.createWindowOnScreen(10,10,200,200,"SCREEN_2")
-        s2.backgroundColor = COLOR_BLUE    
-
-      
-        s3 = self.createWindowOnScreen(50,50,200,200,"SCREEN_3")
-        s3.backgroundColor = COLOR_YELLOW   
-
-
-        s3_1 = Window(0,0,50,50,"SCREEN_3-1")
-        s3.addChildWindow(s3_1)
-        s3_1.backgroundColor = COLOR_BLACK
-
-        
-        s3_2 = Window(150,150,50,50,"SCREEN_3-2")
-        s3.addChildWindow(s3_2)
-        s3_2.backgroundColor = COLOR_PINK
-        
-        x,y = s3.convertPositionFromScreen(75,75) 
-        print(x, y)
-
    
     """
     WINDOW MANAGEMENT
@@ -79,7 +57,7 @@ class WindowSystem(GraphicsEventSystem):
     """
 
     def handleMousePressed(self, x, y):
-    # store the current mouse press coordinates
+        # store the current mouse press coordinates
         self.mousePressX = x
         self.mousePressY = y
 
@@ -108,7 +86,7 @@ class WindowSystem(GraphicsEventSystem):
 
     def handleKeyPressed(self, char):
         pass
-        
+    
     
 # Let's start your window system!
 w = WindowSystem(800,600)
