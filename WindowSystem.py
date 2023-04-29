@@ -3,8 +3,7 @@
 
 """
 Window System - Submission
-by  Aleksandra Kukawka (#448975)
-and Daso Jung (#446806)
+by  
 """
 
 from GraphicsEventSystem import *
@@ -14,6 +13,31 @@ from Window import *
 class WindowSystem(GraphicsEventSystem):
     def start(self):
         self.screen = Screen(self)
+        # add some windows to test
+        s2 = self.createWindowOnScreen(10,10,200,200,"SCREEN_2")
+        s2.backgroundColor = COLOR_BLUE    
+
+      
+        s3 = self.createWindowOnScreen(50,50,200,200,"SCREEN_3")
+        s3.backgroundColor = COLOR_YELLOW   
+
+
+        s3_1 = Window(0,0,50,50,"SCREEN_3-1")
+        s3.addChildWindow(s3_1)
+        s3_1.backgroundColor = COLOR_BLACK
+
+        
+        s3_2 = Window(150,150,50,50,"SCREEN_3-2")
+        s3.addChildWindow(s3_2)
+        s3_2.backgroundColor = COLOR_PINK
+        
+        x,y = s3_2.convertPositionFromScreen(50,50) 
+        print(x, y)
+
+        x,y = s3_2.convertPositionToScreen(0,0) 
+        print(x, y)
+    
+        
    
     """
     WINDOW MANAGEMENT
@@ -86,7 +110,8 @@ class WindowSystem(GraphicsEventSystem):
 
     def handleKeyPressed(self, char):
         pass
-    
+
+        
     
 # Let's start your window system!
 w = WindowSystem(800,600)

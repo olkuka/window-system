@@ -3,8 +3,7 @@
 
 """
 Window System - Submission
-by  Aleksandra Kukawka (#448975)
-and Daso Jung (#446806)
+by 
 """
 
 from GraphicsEventSystem import *
