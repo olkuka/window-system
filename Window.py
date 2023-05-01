@@ -7,6 +7,7 @@ by
 """
 
 from GraphicsEventSystem import *
+from WindowManager import *
 
 class Window:
     def __init__(self, originX, originY, width, height, identifier):
@@ -16,7 +17,7 @@ class Window:
         self.height = height
         self.identifier = identifier
         
-        self.backgroundColor = COLOR_LIGHT_GRAY
+        # self.backgroundColor = COLOR_LIGHT_GRAY
         self.childWindows = []
         self.parentWindow = None
      
@@ -82,7 +83,7 @@ class Window:
         
     def draw(self, ctx):
         # set to draw with the window's background color
-        ctx.setFillColor(self.backgroundColor)
+        # ctx.setFillColor(self.backgroundColor)
         
         # Check if the window has a parent
         if self.parentWindow:
@@ -97,7 +98,7 @@ class Window:
         ctx.setOrigin(screenX, screenY)
 
         # Draw a filled rectangle in the window's local coordinate system
-        ctx.fillRect(0, 0, self.width, self.height)
+        # ctx.fillRect(0, 0, self.width, self.height)
 
         # draw every child window
         for child in self.childWindows:
@@ -111,8 +112,10 @@ class Screen(Window):
     def __init__(self, windowSystem):
         super().__init__(0, 0, windowSystem.width, windowSystem.height, "SCREEN_1")
         self.windowSystem = windowSystem
+        self.windowManager = WindowManager(self.windowSystem) # new instance of WindowManager
 
         
     def draw(self, ctx):
+        self.windowManager.drawDesktop(ctx)
         super().draw(ctx)
     

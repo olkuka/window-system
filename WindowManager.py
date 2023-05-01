@@ -13,7 +13,7 @@ from Window import *
 class WindowManager:
     def __init__(self, windowSystem):
         self.windowSystem = windowSystem
-    
+        self.wallpaperColor = COLOR_LIGHT_BLUE
     
     def checkWindowPosition(self, window, x, y):
         pass
@@ -24,7 +24,8 @@ class WindowManager:
     
     
     def drawDesktop(self, ctx):
-        pass
+        ctx.setFillColor(self.wallpaperColor)
+        ctx.fillRect(0, 0, self.windowSystem.width, self.windowSystem.height)
     
     
     def drawTaskbar(self, ctx):
