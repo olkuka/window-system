@@ -16,25 +16,28 @@ class WindowSystem(GraphicsEventSystem):
         self.screen = Screen(self)
 
         # add some windows to test
-        s2 = self.createWindowOnScreen(10, 10, 200, 200, "SCREEN_2")
-        s2.backgroundColor = COLOR_BLUE
+        s2 = self.createWindowOnScreen(10, 10, 200, 200, "My First App")
+        s2.backgroundColor = COLOR_GREEN
 
-        s3 = self.createWindowOnScreen(50, 50, 200, 200, "SCREEN_3")
+        s3 = self.createWindowOnScreen(50, 50, 200, 200, "My Second App")
         s3.backgroundColor = COLOR_YELLOW
 
-        s3_1 = Window(0, 0, 50, 50, "SCREEN_3-1")
-        s3.addChildWindow(s3_1)
-        s3_1.backgroundColor = COLOR_BLACK
+        s4 = self.createWindowOnScreen(300, 200, 200, 200, "My Third App")
+        s4.backgroundColor = COLOR_PINK
 
-        s3_2 = Window(150, 150, 50, 50, "SCREEN_3-2")
-        s3.addChildWindow(s3_2)
-        s3_2.backgroundColor = COLOR_PINK
+        # s3_1 = Window(0, 0, 50, 50, "SCREEN_3-1")
+        # s3.addChildWindow(s3_1)
+        # s3_1.backgroundColor = COLOR_BLACK
 
-        x, y = s3_2.convertPositionFromScreen(50, 50)
-        print(x, y)
+        # s3_2 = Window(150, 150, 50, 50, "SCREEN_3-2")
+        # s3.addChildWindow(s3_2)
+        # s3_2.backgroundColor = COLOR_PINK
 
-        x, y = s3_2.convertPositionToScreen(0, 0)
-        print(x, y)
+        # x, y = s3_2.convertPositionFromScreen(50, 50)
+        # print(x, y)
+
+        # x, y = s3_2.convertPositionToScreen(0, 0)
+        # print(x, y)
 
     """
     WINDOW MANAGEMENT

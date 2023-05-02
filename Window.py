@@ -81,7 +81,7 @@ class Window:
             localY = y - self.y
             return self.parentWindow.convertPositionFromScreen(localX, localY)
         
-    def draw(self, ctx):
+    def draw(self, ctx, windowManager):
         # set to draw with the window's background color
         ctx.setFillColor(self.backgroundColor)
         
@@ -100,9 +100,11 @@ class Window:
         # Draw a filled rectangle in the window's local coordinate system
         ctx.fillRect(0, 0, self.width, self.height)
 
+        windowManager.decorateWindow(self, ctx)
+
         # draw every child window
         for child in self.childWindows:
-            child.draw(ctx)
+            child.draw(ctx, windowManager)
     
     def handleMouseClicked(self, x, y):
         print("Window " + self.identifier + " was clicked.")
@@ -117,5 +119,5 @@ class Screen(Window):
         
     def draw(self, ctx):
         self.windowManager.drawDesktop(ctx)
-        super().draw(ctx)
+        super().draw(ctx, self.windowManager)
     
