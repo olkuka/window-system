@@ -17,7 +17,7 @@ class Window:
         self.height = height
         self.identifier = identifier
         
-        # self.backgroundColor = COLOR_LIGHT_GRAY
+        self.backgroundColor = None
         self.childWindows = []
         self.parentWindow = None
      
@@ -83,7 +83,7 @@ class Window:
         
     def draw(self, ctx):
         # set to draw with the window's background color
-        # ctx.setFillColor(self.backgroundColor)
+        ctx.setFillColor(self.backgroundColor)
         
         # Check if the window has a parent
         if self.parentWindow:
@@ -98,7 +98,7 @@ class Window:
         ctx.setOrigin(screenX, screenY)
 
         # Draw a filled rectangle in the window's local coordinate system
-        # ctx.fillRect(0, 0, self.width, self.height)
+        ctx.fillRect(0, 0, self.width, self.height)
 
         # draw every child window
         for child in self.childWindows:

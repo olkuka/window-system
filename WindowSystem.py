@@ -30,11 +30,11 @@ class WindowSystem(GraphicsEventSystem):
         s3.addChildWindow(s3_2)
         s3_2.backgroundColor = COLOR_PINK
         
-        # x,y = s3_2.convertPositionFromScreen(50,50) 
-        # print(x, y)
+        x,y = s3_2.convertPositionFromScreen(50,50) 
+        print(x, y)
 
-        # x,y = s3_2.convertPositionToScreen(0,0) 
-        # print(x, y)
+        x,y = s3_2.convertPositionToScreen(0,0) 
+        print(x, y)
     
         
    
