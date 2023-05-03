@@ -14,6 +14,7 @@ from WindowManager import *
 class WindowSystem(GraphicsEventSystem):
     def start(self):
         self.screen = Screen(self)
+        self.windowManager = WindowManager(self)
 
         # add some windows to test
         s2 = self.createWindowOnScreen(10, 10, 200, 200, "My First App")
