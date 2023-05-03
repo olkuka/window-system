@@ -17,7 +17,8 @@ class WindowManager:
         self.titleBarHeight = 20
     
     def checkWindowPosition(self, window, x, y):
-        pass
+        # return true if at least some part of the title bar is visible on screen
+        return  - window.width < x < self.windowSystem.screen +window.width  and - window.titleBarHeight < y < self.windowSystem.screen +window.titleBarHeight
     
     
     def decorateWindow(self, window, ctx):
