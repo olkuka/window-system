@@ -40,7 +40,6 @@ class WindowSystem(GraphicsEventSystem):
         # x, y = s3_2.convertPositionToScreen(0, 0)
         # print(x, y)
 
-
     """
     WINDOW MANAGEMENT
     """
@@ -69,7 +68,6 @@ class WindowSystem(GraphicsEventSystem):
             topParent.removeFromParentWindow()
             self.screen.addChildWindow(topParent)
 
-
     """
     DRAWING
     """
@@ -77,7 +75,6 @@ class WindowSystem(GraphicsEventSystem):
     def handlePaint(self):
         # draw the screen and all of its child windows
         self.screen.draw(self.graphicsContext)
-
 
     """
     INPUT EVENTS
@@ -92,17 +89,19 @@ class WindowSystem(GraphicsEventSystem):
         # check if the mouse release coordinates match the mouse press coordinates
         if x == self.mousePressX and y == self.mousePressY:
             # check the window Decoration at the given location and then return that window
-            decorationClicked = self.screen.windowDecorationAtLocation(x,y)
+            decorationClicked = self.screen.windowDecorationAtLocation(x, y)
 
-            # if there is a Window Decoration, Window Manager handle the event 
+            # if there is a Window Decoration, Window Manager handle the event
             if decorationClicked:
-                localX, localY = decorationClicked.convertPositionFromScreen(x,y)
-                self.windowManager.handleMouseClicked(decorationClicked,localX, localY)
+                localX, localY = decorationClicked.convertPositionFromScreen(
+                    x, y)
+                self.windowManager.handleMouseClicked(
+                    decorationClicked, localX, localY)
                 self.requestRepaint()
-            else: 
+            else:
                 # check the window at the given location
                 windowClicked = self.screen.childWindowAtLocation(x, y)
-                
+
                 # if there exists a window at the given location
                 if windowClicked:
                     # bring it to the front and request paint
@@ -117,8 +116,9 @@ class WindowSystem(GraphicsEventSystem):
         pass
 
     def handleMouseDragged(self, x, y):
-        # check if user pressed on the title bar 
-        window = self.screen.windowDecorationAtLocation(self.mousePressX, self.mousePressY)
+        # check if user pressed on the title bar
+        window = self.screen.windowDecorationAtLocation(
+            self.mousePressX, self.mousePressY)
         if window:
             # make chosen window a top-level window
             self.bringWindowToFront(window)
@@ -128,7 +128,7 @@ class WindowSystem(GraphicsEventSystem):
             # calculate new window coordinates based on above distances
             newX = window.x + deltaX
             newY = window.y + deltaY
-            # if the new position of the window is within the valid bounds 
+            # if the new position of the window is within the valid bounds
             if self.windowManager.checkWindowPosition(window, newX, newY):
                 # set window coordinates to the new ones
                 window.setX(newX)
