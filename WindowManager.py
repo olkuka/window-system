@@ -16,11 +16,11 @@ class WindowManager:
         self.wallpaperColor = COLOR_PURPLE
         self.titleBarHeight = 20
         
-    
     def checkWindowPosition(self, window, x, y):
-        # return true if at least some part of the title bar is visible on screen
-        return  - window.width < x < self.windowSystem.screen + window.width  and - window.titleBarHeight < y < self.windowSystem.screen +window.titleBarHeight
-    
+        # return true if:
+        # 1) at least half of the title bar is visible in terms of horizontal position, and
+        # 2) whole title bar is visible in terms of vertical position
+        return  0 < x + window.width/2 < self.windowSystem.screen.width and 0 < y < self.windowSystem.screen.height - self.titleBarHeight
     
     def decorateWindow(self, window, ctx):
         # check if a window's a top-level window by checking if its parent window is the screen
@@ -70,7 +70,6 @@ class WindowManager:
     def drawDesktop(self, ctx):
         ctx.setFillColor(self.wallpaperColor)
         ctx.fillRect(0, 0, self.windowSystem.width, self.windowSystem.height)
-    
     
     def drawTaskbar(self, ctx):
         pass

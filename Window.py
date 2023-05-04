@@ -9,6 +9,7 @@ by
 from GraphicsEventSystem import *
 from WindowManager import *
 
+
 class Window:
     def __init__(self, originX, originY, width, height, identifier):
         self.x = originX
@@ -16,28 +17,34 @@ class Window:
         self.width = width
         self.height = height
         self.identifier = identifier
-        
+
         self.backgroundColor = None
         self.childWindows = []
         self.parentWindow = None
 
         self.isHidden = False
 
+    def setX(self, value):
+        self.x = value
+
+    def setY(self, value):
+        self.y = value
+
     def setIsHidden(self, value: bool):
         self.isHidden = value
-     
+
     def addChildWindow(self, window):
         # add window to the end of childWindows list
         self.childWindows.append(window)
         # assign window parent
         window.parentWindow = self
-        
+
     def removeFromParentWindow(self):
         # remove window from the childWindows list
         self.parentWindow.childWindows.remove(self)
         # set window parent to None
         self.parentWindow = None
-        
+
     def childWindowAtLocation(self, x, y):
         # check if the current window contains the provided point
         if self.hitTest(x, y):
@@ -50,7 +57,7 @@ class Window:
                 result = child.childWindowAtLocation(childX, childY)
                 # return the topmost child window found
                 if result:
-                    return result 
+                    return result
             # if no child window is found, return the current window
             return self
         else:
@@ -58,17 +65,16 @@ class Window:
 
     def hitTest(self, x, y):
         # if x and y are in a local coordinate system
-        # it's sufficient to check if x and y are within bounds 
-        # [0, width] and [0, height] of the current window 
+        # it's sufficient to check if x and y are within bounds
+        # [0, width] and [0, height] of the current window
         return 0 <= x <= self.width and 0 <= y <= self.height
-    
+
     def hitTestDecoration(self, x, y):
         # the given x, y are in a local corrdinate system
         # check if x and y are within its decoration bounds
-        # A window has a decorarion should be a Top-level window
-        if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1" : 
+        # A window that has a decoration should be a Top-level window
+        if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1":
             return 0 <= x <= self.width and 0 <= y <= self.parentWindow.windowSystem.windowManager.titleBarHeight
-            
 
     def convertPositionToScreen(self, x, y):
         localX = x
@@ -76,32 +82,33 @@ class Window:
         # if this window has no parent, it is already at global screen coordinates
         if not self.parentWindow:
             return localX, localY
-        
+
         # if this window has a parent, recursively convert local coordinates to screen coordinates
-        else :
-            parentX = localX + self.x 
+        else:
+            parentX = localX + self.x
             parentY = localY + self.y
-            return self.parentWindow.convertPositionToScreen(parentX, parentY) 
-    
+            return self.parentWindow.convertPositionToScreen(parentX, parentY)
+
     def convertPositionFromScreen(self, x, y):
         # if this window has no parent, return its coordinates as they are
         if not self.parentWindow:
             return (x, y)
-        
+
         # if this window has a parent, recursively convert screen coordinates to local coordinates
         else:
             localX = x - self.x
             localY = y - self.y
             return self.parentWindow.convertPositionFromScreen(localX, localY)
-        
+
     def draw(self, ctx):
         # set to draw with the window's background color
         ctx.setFillColor(self.backgroundColor)
-        
+
         # Check if the window has a parent
         if self.parentWindow:
             # Convert the window's local origin to global coordinates
-            screenX, screenY = self.parentWindow.convertPositionToScreen(self.x, self.y)
+            screenX, screenY = self.parentWindow.convertPositionToScreen(
+                self.x, self.y)
         else:
             # If the window has no parent, its origin is already in global coordinates
             screenX = self.x
@@ -116,39 +123,30 @@ class Window:
         # draw every child window
         for child in self.childWindows:
             child.draw(ctx)
-    
+
     def handleMouseClicked(self, x, y):
         print("Window " + self.identifier + " was clicked.")
-        
+
 
 class Screen(Window):
     def __init__(self, windowSystem):
         super().__init__(0, 0, windowSystem.width, windowSystem.height, "SCREEN_1")
         self.windowSystem = windowSystem
-        
 
     def draw(self, ctx):
-        # draw wallpaper 
+        # draw wallpaper
         self.windowSystem.windowManager.drawDesktop(ctx)
-       
+
         # draw child window and decoration
         for child in self.childWindows:
             if not child.isHidden:
                 child.draw(ctx)
                 self.windowSystem.windowManager.decorateWindow(child, ctx)
-        
 
     def windowDecorationAtLocation(self, x, y):
         for child in reversed(self.childWindows):
             localX, localY = child.convertPositionFromScreen(x, y)
             if child.hitTestDecoration(localX, localY):
                 return child
-        
+
         return None
-    
-    # def hitTestDecoration(self, child, x, y):
-    #     # the given x, y are in a local corrdinate system
-    #     # check if x and y are within its decoration bounds
-    #     # A window has a decorarion should be a Top-level window
-    #     if child.parentWindow.identifier == "SCREEN_1" : 
-    #         return 0 <= x <= child.width and 0 <= y <= self.windowSystem.windowManager.titleBarHeight

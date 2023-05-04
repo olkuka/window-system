@@ -40,6 +40,7 @@ class WindowSystem(GraphicsEventSystem):
         # x, y = s3_2.convertPositionToScreen(0, 0)
         # print(x, y)
 
+
     """
     WINDOW MANAGEMENT
     """
@@ -68,6 +69,7 @@ class WindowSystem(GraphicsEventSystem):
             topParent.removeFromParentWindow()
             self.screen.addChildWindow(topParent)
 
+
     """
     DRAWING
     """
@@ -75,6 +77,7 @@ class WindowSystem(GraphicsEventSystem):
     def handlePaint(self):
         # draw the screen and all of its child windows
         self.screen.draw(self.graphicsContext)
+
 
     """
     INPUT EVENTS
@@ -114,9 +117,28 @@ class WindowSystem(GraphicsEventSystem):
         pass
 
     def handleMouseDragged(self, x, y):
-        # clear the mouse press coordinates when mouse is dragged
-        self.mousePressX = None
-        self.mousePressY = None
+        # check if user pressed on the title bar 
+        window = self.screen.windowDecorationAtLocation(self.mousePressX, self.mousePressY)
+        if window:
+            # make chosen window a top-level window
+            self.bringWindowToFront(window)
+            # calculate the distances between previous and current mouse locations
+            deltaX = x - self.mousePressX
+            deltaY = y - self.mousePressY
+            # calculate new window coordinates based on above distances
+            newX = window.x + deltaX
+            newY = window.y + deltaY
+            # if the new position of the window is within the valid bounds 
+            if self.windowManager.checkWindowPosition(window, newX, newY):
+                # set window coordinates to the new ones
+                window.setX(newX)
+                window.setY(newY)
+                # request a repaint
+                self.requestRepaint()
+
+        # save current coordinates, so they can be used in the next drag to calculate the distance
+        self.mousePressX = x
+        self.mousePressY = y
 
     def handleKeyPressed(self, char):
         pass
