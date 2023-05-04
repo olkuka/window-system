@@ -94,7 +94,7 @@ class WindowSystem(GraphicsEventSystem):
             # if there is a Window Decoration, Window Manager handle the event 
             if DecorationClicked :
                 localX, localY = DecorationClicked.convertPositionFromScreen(x,y)
-                self.windowManager.handleMousePressed(DecorationClicked,localX, localY)
+                self.windowManager.handleMouseClicked(DecorationClicked,localX, localY)
                 self.requestRepaint()
             else: 
                 # check the window at the given location
