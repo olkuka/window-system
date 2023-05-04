@@ -18,7 +18,7 @@ class WindowManager:
     
     def checkWindowPosition(self, window, x, y):
         # return true if at least some part of the title bar is visible on screen
-        return  - window.width < x < self.windowSystem.screen +window.width  and - window.titleBarHeight < y < self.windowSystem.screen +window.titleBarHeight
+        return  - window.width < x < self.windowSystem.screen + window.width  and - window.titleBarHeight < y < self.windowSystem.screen +window.titleBarHeight
     
     
     def decorateWindow(self, window, ctx):
@@ -48,7 +48,13 @@ class WindowManager:
             # add a minimize button
             ctx.drawLine(window.width - 45, 10, window.width - 35, 10)
     
-    
+    def handleMouseClicked(self, window, x, y):
+        
+        print("Window " + window.identifier + "'s Decoration was clicked.")
+        
+
+
+
     def drawDesktop(self, ctx):
         ctx.setFillColor(self.wallpaperColor)
         ctx.fillRect(0, 0, self.windowSystem.width, self.windowSystem.height)

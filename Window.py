@@ -59,6 +59,14 @@ class Window:
         # [0, width] and [0, height] of the current window 
         return 0 <= x <= self.width and 0 <= y <= self.height
     
+    def hitTestDecoration(self, x, y):
+        # the given x, y are in a local corrdinate system
+        # check if x and y are within its decoration bounds
+        # A window has a decorarion should be a Top-level window
+        if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1" : 
+            return 0 <= x <= self.width and 0 <= y <= self.parentWindow.windowSystem.windowManager.titleBarHeight
+            
+
     def convertPositionToScreen(self, x, y):
         localX = x
         localY = y
@@ -120,9 +128,37 @@ class Screen(Window):
         # draw wallpaper 
         self.windowSystem.windowManager.drawDesktop(ctx)
        
+        # draw child window and decoration
         for child in self.childWindows:
             if not child.isHidden:
                 child.draw(ctx)
                 self.windowSystem.windowManager.decorateWindow(child, ctx)
-            
+        
+
+    def windowDecorationAtLocation(self,x,y):
+        for child in reversed(self.childWindows) :
+
+            localX, localY = child.convertPositionFromScreen(x,y)
+
+            if child.hitTestDecoration(localX,localY) :
+                
+                return child
+        
+        return None
+    
+    # def hitTestDecoration(self, child, x, y):
+    #     # the given x, y are in a local corrdinate system
+    #     # check if x and y are within its decoration bounds
+    #     # A window has a decorarion should be a Top-level window
+    #     if child.parentWindow.identifier == "SCREEN_1" : 
+    #         return 0 <= x <= child.width and 0 <= y <= self.windowSystem.windowManager.titleBarHeight
+
+
+    
+   
+
+
+
+
+
     
