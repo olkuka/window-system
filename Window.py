@@ -20,6 +20,8 @@ class Window:
         self.backgroundColor = None
         self.childWindows = []
         self.parentWindow = None
+
+        self.isHidden = False
      
     def addChildWindow(self, window):
         # add window to the end of childWindows list
@@ -118,9 +120,9 @@ class Screen(Window):
         # draw wallpaper 
         self.windowSystem.windowManager.drawDesktop(ctx)
        
-       
-        for child in self.childWindows :
-            child.draw(ctx)
-            self.windowSystem.windowManager.decorateWindow(child, ctx)
+        for child in self.childWindows:
+            if not child.isHidden:
+                child.draw(ctx)
+                self.windowSystem.windowManager.decorateWindow(child, ctx)
             
     
