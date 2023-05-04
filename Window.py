@@ -22,6 +22,9 @@ class Window:
         self.parentWindow = None
 
         self.isHidden = False
+
+    def setIsHidden(self, value: bool):
+        self.isHidden = value
      
     def addChildWindow(self, window):
         # add window to the end of childWindows list
@@ -135,13 +138,10 @@ class Screen(Window):
                 self.windowSystem.windowManager.decorateWindow(child, ctx)
         
 
-    def windowDecorationAtLocation(self,x,y):
-        for child in reversed(self.childWindows) :
-
-            localX, localY = child.convertPositionFromScreen(x,y)
-
-            if child.hitTestDecoration(localX,localY) :
-                
+    def windowDecorationAtLocation(self, x, y):
+        for child in reversed(self.childWindows):
+            localX, localY = child.convertPositionFromScreen(x, y)
+            if child.hitTestDecoration(localX, localY):
                 return child
         
         return None
@@ -152,13 +152,3 @@ class Screen(Window):
     #     # A window has a decorarion should be a Top-level window
     #     if child.parentWindow.identifier == "SCREEN_1" : 
     #         return 0 <= x <= child.width and 0 <= y <= self.windowSystem.windowManager.titleBarHeight
-
-
-    
-   
-
-
-
-
-
-    

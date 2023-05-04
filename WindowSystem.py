@@ -89,12 +89,12 @@ class WindowSystem(GraphicsEventSystem):
         # check if the mouse release coordinates match the mouse press coordinates
         if x == self.mousePressX and y == self.mousePressY:
             # check the window Decoration at the given location and then return that window
-            DecorationClicked = self.screen.windowDecorationAtLocation(x,y)
+            decorationClicked = self.screen.windowDecorationAtLocation(x,y)
 
             # if there is a Window Decoration, Window Manager handle the event 
-            if DecorationClicked :
-                localX, localY = DecorationClicked.convertPositionFromScreen(x,y)
-                self.windowManager.handleMouseClicked(DecorationClicked,localX, localY)
+            if decorationClicked:
+                localX, localY = decorationClicked.convertPositionFromScreen(x,y)
+                self.windowManager.handleMouseClicked(decorationClicked,localX, localY)
                 self.requestRepaint()
             else: 
                 # check the window at the given location

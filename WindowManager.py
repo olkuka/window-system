@@ -15,6 +15,7 @@ class WindowManager:
         self.windowSystem = windowSystem
         self.wallpaperColor = COLOR_PURPLE
         self.titleBarHeight = 20
+        
     
     def checkWindowPosition(self, window, x, y):
         # return true if at least some part of the title bar is visible on screen
@@ -49,11 +50,22 @@ class WindowManager:
             ctx.drawLine(window.width - 45, 10, window.width - 35, 10)
     
     def handleMouseClicked(self, window, x, y):
-        
         print("Window " + window.identifier + "'s Decoration was clicked.")
         
+        # check if close button was clicked
+        if window.width - 15 <= x <= window.width - 5 and 5 <= y <= 15:
+            print('Close button clicked')
+            window.removeFromParentWindow()
 
+        # check if minimize button was clicked    
+        elif window.width - 45 <= x <= window.width - 35 and 5 <= y <= 15:
+            print('Minimize button clicked')
+            window.setIsHidden(True)
 
+        # if no button was clicked
+        else:
+            # bring this window to the front
+            self.windowSystem.bringWindowToFront(window)
 
     def drawDesktop(self, ctx):
         ctx.setFillColor(self.wallpaperColor)
