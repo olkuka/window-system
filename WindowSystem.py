@@ -88,17 +88,27 @@ class WindowSystem(GraphicsEventSystem):
     def handleMouseReleased(self, x, y):
         # check if the mouse release coordinates match the mouse press coordinates
         if x == self.mousePressX and y == self.mousePressY:
-            # check the window at the given location
-            windowClicked = self.screen.childWindowAtLocation(x, y)
-            # if there exists a window at the given location
-            if windowClicked:
-                # bring it to the front and request paint
-                self.bringWindowToFront(windowClicked)
+            # check the window Decoration at the given location and then return that window
+            DecorationClicked = self.screen.windowDecorationAtLocation(x,y)
+
+            # if there is a Window Decoration, Window Manager handle the event 
+            if DecorationClicked :
+                localX, localY = DecorationClicked.convertPositionFromScreen(x,y)
+                self.windowManager.handleMousePressed(DecorationClicked,localX, localY)
                 self.requestRepaint()
-                # propagate the click event to the window
-                windowClicked.handleMouseClicked(x, y)
-            else:
-                self.screen.handleMouseClicked(x, y)
+            else: 
+                # check the window at the given location
+                windowClicked = self.screen.childWindowAtLocation(x, y)
+                
+                # if there exists a window at the given location
+                if windowClicked:
+                    # bring it to the front and request paint
+                    self.bringWindowToFront(windowClicked)
+                    self.requestRepaint()
+                    # propagate the click event to the window
+                    windowClicked.handleMouseClicked(x, y)
+                else:
+                    self.screen.handleMouseClicked(x, y)
 
     def handleMouseMoved(self, x, y):
         pass
