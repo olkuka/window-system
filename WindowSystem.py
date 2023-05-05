@@ -131,8 +131,8 @@ class WindowSystem(GraphicsEventSystem):
             # if the new position of the window is within the valid bounds
             if self.windowManager.checkWindowPosition(window, newX, newY):
                 # set window coordinates to the new ones
-                window.setX(newX)
-                window.setY(newY)
+                window.x = newX
+                window.y = newY
                 # request a repaint
                 self.requestRepaint()
 

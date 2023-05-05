@@ -24,15 +24,6 @@ class Window:
 
         self.isHidden = False
 
-    def setX(self, value):
-        self.x = value
-
-    def setY(self, value):
-        self.y = value
-
-    def setIsHidden(self, value: bool):
-        self.isHidden = value
-
     def addChildWindow(self, window):
         # add window to the end of childWindows list
         self.childWindows.append(window)
