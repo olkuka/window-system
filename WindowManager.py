@@ -70,5 +70,24 @@ class WindowManager:
         ctx.fillRect(0, 0, self.windowSystem.width, self.windowSystem.height)
     
     def drawTaskbar(self, ctx):
-        pass
+        # draw a taskbar rectangle
+        ctx.setFillColor(COLOR_LIGHT_GRAY)
+        ctx.fillRect(0, self.windowSystem.height - 40, self.windowSystem.width, self.windowSystem.height)
+
+        # draw a menu icon 
+        ctx.setFillColor(COLOR_GRAY)
+        ctx.fillRect(0, self.windowSystem.height - 40, 40, self.windowSystem.height)
+        
+        # draw an icon for every child of the screen
+        currX = 42
+        ctx.setFillColor(COLOR_LIGHT_BLUE)
+        ctx.setFont(Font(family="Helvetica", size=24, weight="normal"))
+        for child in self.windowSystem.screen.childWindows[:-1]:
+            ctx.fillRect(currX, self.windowSystem.height - 40, currX + 40, self.windowSystem.height)
+            ctx.drawString(child.identifier[0], currX + 13, self.windowSystem.height - 32)
+            currX = currX + 42
+
+        ctx.setFillColor(COLOR_BLUE)
+        ctx.fillRect(currX, self.windowSystem.height - 40, currX + 40, self.windowSystem.height)
+        ctx.drawString(self.windowSystem.screen.childWindows[-1].identifier[0], currX + 13, self.windowSystem.height - 32)
         

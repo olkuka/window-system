@@ -17,13 +17,13 @@ class WindowSystem(GraphicsEventSystem):
         self.windowManager = WindowManager(self)
 
         # add some windows to test
-        s2 = self.createWindowOnScreen(10, 10, 200, 200, "My First App")
+        s2 = self.createWindowOnScreen(10, 10, 200, 200, "First App")
         s2.backgroundColor = COLOR_GREEN
 
-        s3 = self.createWindowOnScreen(50, 50, 200, 200, "My Second App")
+        s3 = self.createWindowOnScreen(50, 50, 200, 200, "Second App")
         s3.backgroundColor = COLOR_YELLOW
 
-        s4 = self.createWindowOnScreen(300, 200, 200, 200, "My Third App")
+        s4 = self.createWindowOnScreen(300, 200, 200, 200, "Third App")
         s4.backgroundColor = COLOR_PINK
 
         # s3_1 = Window(0, 0, 50, 50, "SCREEN_3-1")

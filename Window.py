@@ -127,6 +127,7 @@ class Screen(Window):
     def draw(self, ctx):
         # draw wallpaper
         self.windowSystem.windowManager.drawDesktop(ctx)
+        self.windowSystem.windowManager.drawTaskbar(ctx)
 
         # draw child window and decoration
         for child in self.childWindows:
