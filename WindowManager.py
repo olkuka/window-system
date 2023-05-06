@@ -80,14 +80,18 @@ class WindowManager:
         
         # draw an icon for every child of the screen
         currX = 42
-        ctx.setFillColor(COLOR_LIGHT_BLUE)
-        ctx.setFont(Font(family="Helvetica", size=24, weight="normal"))
-        for child in self.windowSystem.screen.childWindows[:-1]:
+        # sort children alphabetically, so we can have a fixed order
+        sortedChildren = sorted(self.windowSystem.screen.childWindows, key = lambda child: child.identifier)
+
+        # for every child draw its icon
+        for child in sortedChildren:
+            # if the window is a top-level window, set its color to blue
+            if child == self.windowSystem.screen.childWindows[-1]:
+                ctx.setFillColor(COLOR_BLUE)
+            # if not - set the color to light blue
+            else:
+                ctx.setFillColor(COLOR_LIGHT_BLUE)
+
             ctx.fillRect(currX, self.windowSystem.height - 40, currX + 40, self.windowSystem.height)
             ctx.drawString(child.identifier[0], currX + 13, self.windowSystem.height - 32)
             currX = currX + 42
-
-        ctx.setFillColor(COLOR_BLUE)
-        ctx.fillRect(currX, self.windowSystem.height - 40, currX + 40, self.windowSystem.height)
-        ctx.drawString(self.windowSystem.screen.childWindows[-1].identifier[0], currX + 13, self.windowSystem.height - 32)
-        
