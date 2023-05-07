@@ -35,7 +35,7 @@ class WindowSystem(GraphicsEventSystem):
         # s4_2.backgroundColor = COLOR_BLACK
         # s4_2.layoutAnchors = LayoutAnchor.right | LayoutAnchor.bottom
 
-        s4_3 = Window(150, 150, 100, 100, "SCREEN_3-3")
+        s4_3 = Window(15, 10, 100, 100, "SCREEN_3-3")
         s4.addChildWindow(s4_3)
         s4_3.backgroundColor = COLOR_BLACK
         s4_3.layoutAnchors = LayoutAnchor.left | LayoutAnchor.right 
