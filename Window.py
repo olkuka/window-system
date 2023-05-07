@@ -10,7 +10,6 @@ from GraphicsEventSystem import *
 from WindowManager import *
 
 
-
 class Window:
     def __init__(self, originX, originY, width, height, identifier):
         self.x = originX
@@ -19,15 +18,12 @@ class Window:
         self.height = height
         self.identifier = identifier
 
-
         self.backgroundColor = None
         self.childWindows = []
         self.parentWindow = None
 
         self.isHidden = False
-
-
-        self.isHidden = False
+        self.taskbarIconX = None
 
     def addChildWindow(self, window):
         # add window to the end of childWindows list
@@ -62,10 +58,9 @@ class Window:
         else:
             return None
 
+
     def hitTest(self, x, y):
         # if x and y are in a local coordinate system
-        # it's sufficient to check if x and y are within bounds
-        # [0, width] and [0, height] of the current window
         # it's sufficient to check if x and y are within bounds
         # [0, width] and [0, height] of the current window
         return 0 <= x <= self.width and 0 <= y <= self.height
@@ -76,10 +71,7 @@ class Window:
         # check if x and y are within its decoration bounds
         # A window that has a decoration should be a Top-level window
         if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1":
-        # A window that has a decoration should be a Top-level window
-        if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1":
             return 0 <= x <= self.width and 0 <= y <= self.parentWindow.windowSystem.windowManager.titleBarHeight
-
 
     def convertPositionToScreen(self, x, y):
         localX = x
@@ -88,20 +80,17 @@ class Window:
         if not self.parentWindow:
             return localX, localY
 
-
         # if this window has a parent, recursively convert local coordinates to screen coordinates
         else:
             parentX = localX + self.x
             parentY = localY + self.y
             return self.parentWindow.convertPositionToScreen(parentX, parentY)
-
-            return self.parentWindow.convertPositionToScreen(parentX, parentY)
+        
 
     def convertPositionFromScreen(self, x, y):
         # if this window has no parent, return its coordinates as they are
         if not self.parentWindow:
             return (x, y)
-
 
         # if this window has a parent, recursively convert screen coordinates to local coordinates
         else:
@@ -113,7 +102,6 @@ class Window:
     def draw(self, ctx):
         # set to draw with the window's background color
         ctx.setFillColor(self.backgroundColor)
-
 
         # Check if the window has a parent
         if self.parentWindow:
@@ -150,8 +138,7 @@ class Screen(Window):
 
 
     def draw(self, ctx):
-        # draw wallpaper
-        # draw wallpaper
+        # draw wallpaper and task bar
         self.windowSystem.windowManager.drawDesktop(ctx)
         self.windowSystem.windowManager.drawTaskbar(ctx)
 
@@ -160,22 +147,11 @@ class Screen(Window):
             if not child.isHidden:
                 child.draw(ctx)
                 self.windowSystem.windowManager.decorateWindow(child, ctx)
-        for child in self.childWindows:
-            if not child.isHidden:
-                child.draw(ctx)
-                self.windowSystem.windowManager.decorateWindow(child, ctx)
 
-    def windowDecorationAtLocation(self, x, y):
-        for child in reversed(self.childWindows):
-            localX, localY = child.convertPositionFromScreen(x, y)
-            if child.hitTestDecoration(localX, localY):
+
     def windowDecorationAtLocation(self, x, y):
         for child in reversed(self.childWindows):
             localX, localY = child.convertPositionFromScreen(x, y)
             if child.hitTestDecoration(localX, localY):
                 return child
-
-        return None
-
-
         return None

@@ -90,13 +90,20 @@ class WindowSystem(GraphicsEventSystem):
         if x == self.mousePressX and y == self.mousePressY:
             # check the window Decoration at the given location and then return that window
             decorationClicked = self.screen.windowDecorationAtLocation(x, y)
+            windowTaskbarIconClicked = self.windowManager.hitTaskbarIcon(x, y)
 
-            # if there is a Window Decoration, Window Manager handle the event
+            # if there is a Window Decoration, Window Manager handles the event
             if decorationClicked:
                 localX, localY = decorationClicked.convertPositionFromScreen(
                     x, y)
                 self.windowManager.handleMouseClicked(
                     decorationClicked, localX, localY)
+                self.requestRepaint()
+            # if a window taskbar icon is clicked, Window Manager handles the event   
+            elif windowTaskbarIconClicked:
+                # set isHidden property to False and call handleMouseClicked to bring the window to the front
+                windowTaskbarIconClicked.isHidden = False
+                self.windowManager.handleMouseClicked(windowTaskbarIconClicked, 0, 0)
                 self.requestRepaint()
             else:
                 # check the window at the given location
