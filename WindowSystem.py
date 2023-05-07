@@ -35,11 +35,10 @@ class WindowSystem(GraphicsEventSystem):
         # s4_2.backgroundColor = COLOR_BLACK
         # s4_2.layoutAnchors = LayoutAnchor.right | LayoutAnchor.bottom
 
-        s4_3 = Window(15, 10, 100, 100, "SCREEN_3-3")
-        s4.addChildWindow(s4_3)
-        s4_3.backgroundColor = COLOR_BLACK
-        s4_3.layoutAnchors = LayoutAnchor.left | LayoutAnchor.right 
-    
+        # s4_3 = Window(150, 150, 100, 100, "SCREEN_3-3")
+        # s4.addChildWindow(s4_3)
+        # s4_3.backgroundColor = COLOR_BLACK
+        # s4_3.layoutAnchors = LayoutAnchor.left | LayoutAnchor.right
 
     """
     WINDOW MANAGEMENT
@@ -90,7 +89,8 @@ class WindowSystem(GraphicsEventSystem):
         # check if the mouse release coordinates match the mouse press coordinates
         if x == self.mousePressX and y == self.mousePressY:
             # check the window Decoration at the given location and then return that window
-            decorationClicked, isResizable = self.screen.windowDecorationAtLocation(x, y)
+            decorationClicked, isResizable = self.screen.windowDecorationAtLocation(
+                x, y)
 
             # if there is a Window Decoration, Window Manager handle the event
             if decorationClicked and isResizable == False:
@@ -120,14 +120,14 @@ class WindowSystem(GraphicsEventSystem):
         # check if user pressed on the title bar
         window, isResizeble = self.screen.windowDecorationAtLocation(
             self.mousePressX, self.mousePressY)
-        
+
         if window:
             # make chosen window a top-level window
             self.bringWindowToFront(window)
             # calculate the distances between previous and current mouse locations
             deltaX = x - self.mousePressX
             deltaY = y - self.mousePressY
-            
+
             # calculate new window coordinates based on above distances
             newX = window.x + deltaX
             newY = window.y + deltaY
@@ -135,7 +135,7 @@ class WindowSystem(GraphicsEventSystem):
             # calculate new window size based on above distances
             newWidth = max(window.width + deltaX, MIN_WINDOW_WIDTH)
             newHeight = max(window.height + deltaY, MIN_WINDOW_HEIGHT)
-            
+
             if isResizeble:
                 window.resize(window.x, window.y, newWidth, newHeight)
 
@@ -144,7 +144,7 @@ class WindowSystem(GraphicsEventSystem):
                 # set window coordinates to the new ones
                 window.x = newX
                 window.y = newY
-                
+
             # request a repaint
             self.requestRepaint()
 

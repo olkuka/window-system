@@ -10,18 +10,19 @@ and Student Name 2 (#999999)
 from GraphicsEventSystem import *
 from Window import *
 
+
 class WindowManager:
     def __init__(self, windowSystem):
         self.windowSystem = windowSystem
         self.wallpaperColor = COLOR_PURPLE
         self.titleBarHeight = 20
-        
+
     def checkWindowPosition(self, window, x, y):
         # return true if:
         # 1) at least half of the title bar is visible in terms of horizontal position, and
         # 2) whole title bar is visible in terms of vertical position
-        return  0 < x + window.width/2 < self.windowSystem.screen.width and 0 < y < self.windowSystem.screen.height - self.titleBarHeight
-    
+        return 0 < x + window.width/2 < self.windowSystem.screen.width and 0 < y < self.windowSystem.screen.height - self.titleBarHeight
+
     def decorateWindow(self, window, ctx):
         # check if a window's a top-level window by checking if its parent window is the screen
         if window.parentWindow == self.windowSystem.screen:
@@ -37,7 +38,7 @@ class WindowManager:
             ctx.setFillColor(titleBarColor)
             ctx.fillRect(0, 0, window.width, self.titleBarHeight)
             ctx.drawString(window.identifier, 4, 2)
-            
+
             # add a stroked border
             ctx.setStrokeColor(COLOR_LIGHT_GRAY)
             ctx.strokeRect(0, 0, window.width, window.height)
@@ -54,16 +55,17 @@ class WindowManager:
 
             # Draw the resize indicator in the bottom-right corner
             ctx.setFillColor(COLOR_LIGHT_GRAY)
-            ctx.fillRect(window.width - 10, window.height - 10, window.width, window.height)
-    
+            ctx.fillRect(window.width - 10, window.height -
+                         10, window.width, window.height)
+
     def handleMouseClicked(self, window, x, y):
         # print("Window " + window.identifier + "'s Decoration was clicked.")
-        
+
         # check if close button was clicked
         if window.width - 15 <= x <= window.width - 5 and 5 <= y <= 15:
             window.removeFromParentWindow()
 
-        # check if minimize button was clicked    
+        # check if minimize button was clicked
         elif window.width - 45 <= x <= window.width - 35 and 5 <= y <= 15:
             window.isHidden = True
 
@@ -75,20 +77,23 @@ class WindowManager:
     def drawDesktop(self, ctx):
         ctx.setFillColor(self.wallpaperColor)
         ctx.fillRect(0, 0, self.windowSystem.width, self.windowSystem.height)
-    
+
     def drawTaskbar(self, ctx):
         # draw a taskbar rectangle
         ctx.setFillColor(COLOR_LIGHT_GRAY)
-        ctx.fillRect(0, self.windowSystem.height - 40, self.windowSystem.width, self.windowSystem.height)
+        ctx.fillRect(0, self.windowSystem.height - 40,
+                     self.windowSystem.width, self.windowSystem.height)
 
-        # draw a menu icon 
+        # draw a menu icon
         ctx.setFillColor(COLOR_GRAY)
-        ctx.fillRect(0, self.windowSystem.height - 40, 40, self.windowSystem.height)
-        
+        ctx.fillRect(0, self.windowSystem.height -
+                     40, 40, self.windowSystem.height)
+
         # draw an icon for every child of the screen
         currX = 42
         # sort children alphabetically, so we can have a fixed order
-        sortedChildren = sorted(self.windowSystem.screen.childWindows, key = lambda child: child.identifier)
+        sortedChildren = sorted(
+            self.windowSystem.screen.childWindows, key=lambda child: child.identifier)
 
         # for every child draw its icon
         for child in sortedChildren:
@@ -99,6 +104,8 @@ class WindowManager:
             else:
                 ctx.setFillColor(COLOR_LIGHT_BLUE)
 
-            ctx.fillRect(currX, self.windowSystem.height - 40, currX + 40, self.windowSystem.height)
-            ctx.drawString(child.identifier[0], currX + 13, self.windowSystem.height - 32)
+            ctx.fillRect(currX, self.windowSystem.height - 40,
+                         currX + 40, self.windowSystem.height)
+            ctx.drawString(
+                child.identifier[0], currX + 13, self.windowSystem.height - 32)
             currX = currX + 42
