@@ -16,13 +16,23 @@ class WindowManager:
         self.windowSystem = windowSystem
         self.wallpaperColor = COLOR_PURPLE
         self.titleBarHeight = 20
-
+        self.taskBarHeight = 40
+        
     def checkWindowPosition(self, window, x, y):
         # return true if:
         # 1) at least half of the title bar is visible in terms of horizontal position, and
         # 2) whole title bar is visible in terms of vertical position
-        return 0 < x + window.width/2 < self.windowSystem.screen.width and 0 < y < self.windowSystem.screen.height - self.titleBarHeight
-
+        return  0 < x + window.width/2 < self.windowSystem.screen.width and 0 < y < self.windowSystem.screen.height - self.titleBarHeight
+    
+    def hitTaskbarIcon(self, x, y):
+        # check if the click is within the taskbar
+        if y >= self.windowSystem.screen.height - self.taskBarHeight:
+            # if yes - check which window's icon was clicked
+            for child in self.windowSystem.screen.childWindows:
+                if child.taskbarIconX <= x <= child.taskbarIconX + 40:
+                    return child
+        return None
+    
     def decorateWindow(self, window, ctx):
         # check if a window's a top-level window by checking if its parent window is the screen
         if window.parentWindow == self.windowSystem.screen:
@@ -59,15 +69,16 @@ class WindowManager:
                          10, window.width, window.height)
 
     def handleMouseClicked(self, window, x, y):
-        # print("Window " + window.identifier + "'s Decoration was clicked.")
-
         # check if close button was clicked
         if window.width - 15 <= x <= window.width - 5 and 5 <= y <= 15:
+            # remove window completely 
             window.removeFromParentWindow()
 
-        # check if minimize button was clicked
+        # check if minimize button was clicked    
         elif window.width - 45 <= x <= window.width - 35 and 5 <= y <= 15:
+            # set isHidden to True and bring the other window to the front
             window.isHidden = True
+            self.windowSystem.bringWindowToFront(self.windowSystem.screen.childWindows[-2])
 
         # if no button was clicked
         else:
@@ -77,7 +88,8 @@ class WindowManager:
     def drawDesktop(self, ctx):
         ctx.setFillColor(self.wallpaperColor)
         ctx.fillRect(0, 0, self.windowSystem.width, self.windowSystem.height)
-
+    
+    
     def drawTaskbar(self, ctx):
         # draw a taskbar rectangle
         ctx.setFillColor(COLOR_LIGHT_GRAY)
@@ -104,6 +116,7 @@ class WindowManager:
             else:
                 ctx.setFillColor(COLOR_LIGHT_BLUE)
 
+            child.taskbarIconX = currX
             ctx.fillRect(currX, self.windowSystem.height - 40,
                          currX + 40, self.windowSystem.height)
             ctx.drawString(
