@@ -89,17 +89,19 @@ class WindowSystem(GraphicsEventSystem):
         # check if the mouse release coordinates match the mouse press coordinates
         if x == self.mousePressX and y == self.mousePressY:
             # check the window Decoration at the given location and then return that window
-            DecorationClicked = self.screen.windowDecorationAtLocation(x,y)
+            decorationClicked = self.screen.windowDecorationAtLocation(x, y)
 
-            # if there is a Window Decoration, Window Manager handle the event 
-            if DecorationClicked :
-                localX, localY = DecorationClicked.convertPositionFromScreen(x,y)
-                self.windowManager.handleMouseClicked(DecorationClicked,localX, localY)
+            # if there is a Window Decoration, Window Manager handle the event
+            if decorationClicked:
+                localX, localY = decorationClicked.convertPositionFromScreen(
+                    x, y)
+                self.windowManager.handleMouseClicked(
+                    decorationClicked, localX, localY)
                 self.requestRepaint()
-            else: 
+            else:
                 # check the window at the given location
                 windowClicked = self.screen.childWindowAtLocation(x, y)
-                
+
                 # if there exists a window at the given location
                 if windowClicked:
                     # bring it to the front and request paint
@@ -114,9 +116,29 @@ class WindowSystem(GraphicsEventSystem):
         pass
 
     def handleMouseDragged(self, x, y):
-        # clear the mouse press coordinates when mouse is dragged
-        self.mousePressX = None
-        self.mousePressY = None
+        # check if user pressed on the title bar
+        window = self.screen.windowDecorationAtLocation(
+            self.mousePressX, self.mousePressY)
+        if window:
+            # make chosen window a top-level window
+            self.bringWindowToFront(window)
+            # calculate the distances between previous and current mouse locations
+            deltaX = x - self.mousePressX
+            deltaY = y - self.mousePressY
+            # calculate new window coordinates based on above distances
+            newX = window.x + deltaX
+            newY = window.y + deltaY
+            # if the new position of the window is within the valid bounds
+            if self.windowManager.checkWindowPosition(window, newX, newY):
+                # set window coordinates to the new ones
+                window.x = newX
+                window.y = newY
+                # request a repaint
+                self.requestRepaint()
+
+        # save current coordinates, so they can be used in the next drag to calculate the distance
+        self.mousePressX = x
+        self.mousePressY = y
 
     def handleKeyPressed(self, char):
         pass
