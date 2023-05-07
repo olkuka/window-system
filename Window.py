@@ -8,6 +8,12 @@ by
 
 from GraphicsEventSystem import *
 from WindowManager import *
+from collections import namedtuple
+
+AllAnchors = namedtuple('AllAnchors', "top right bottom left")
+LayoutAnchor = AllAnchors(1 << 0, 1 << 1, 1 << 2, 1 << 3)
+MIN_WINDOW_WIDTH = 10
+MIN_WINDOW_HEIGHT = 10
 
 
 class Window:
@@ -24,6 +30,8 @@ class Window:
 
         self.isHidden = False
 
+        self.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left
+     
     def addChildWindow(self, window):
         # add window to the end of childWindows list
         self.childWindows.append(window)
@@ -118,7 +126,52 @@ class Window:
     def handleMouseClicked(self, x, y):
         print("Window " + self.identifier + " was clicked.")
 
+    def resize(self, x, y, width, height) : 
 
+        # Apply minimum size constraints
+        width = max(width, MIN_WINDOW_WIDTH)
+        height = max(height, MIN_WINDOW_HEIGHT)
+        
+        # Update window position and size
+        self.x = x 
+        self.y = y 
+        self.width = width
+        self.height = height
+        
+        #reposition its child windows based on a size change
+        self.layoutChildWindows(width, height)
+
+    def layoutChildWindows(self, width, height):
+        # Perform layout of child windows based on the resizing of the current window
+        # Example implementation for anchoring child windows to the top-left corner
+        for child in self.childWindows:
+            
+            marginX = 0
+            marginY = 0
+
+            if child.layoutAnchors & LayoutAnchor.right:
+                marginX = self.width - child.width
+            
+            if child.layoutAnchors & LayoutAnchor.left:
+                marginX = 0
+            
+            if child.layoutAnchors & LayoutAnchor.bottom:
+                marginY = self.height - child.height
+            
+            if child.layoutAnchors & LayoutAnchor.top:
+                marginY = 0
+
+            
+            # Apply minimum size constraints
+            child.width = max(child.width, MIN_WINDOW_WIDTH)
+            child.height = max(child.height, MIN_WINDOW_HEIGHT)
+            
+            # Update child window position
+            child.x = self.x + marginX
+            child.y = self.y + marginY
+
+            
+                    
 class Screen(Window):
     def __init__(self, windowSystem):
         super().__init__(0, 0, windowSystem.width, windowSystem.height, "SCREEN_1")
@@ -142,3 +195,13 @@ class Screen(Window):
                 return child
 
         return None
+    
+   
+    
+   
+
+
+
+
+
+    
