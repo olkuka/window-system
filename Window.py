@@ -12,8 +12,8 @@ from collections import namedtuple
 
 AllAnchors = namedtuple('AllAnchors', "top right bottom left")
 LayoutAnchor = AllAnchors(1 << 0, 1 << 1, 1 << 2, 1 << 3)
-MIN_WINDOW_WIDTH = 10
-MIN_WINDOW_HEIGHT = 10
+MIN_WINDOW_WIDTH = 100
+MIN_WINDOW_HEIGHT = 100
 
 
 class Window:
@@ -32,6 +32,48 @@ class Window:
 
         self.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left
      
+    def resize(self, x, y, width, height):
+        # Apply minimum size constraints
+        width = max(width, MIN_WINDOW_WIDTH)
+        height = max(height, MIN_WINDOW_HEIGHT)
+
+        # Reposition child windows based on size change
+        self.layoutChildWindows(width, height)
+          
+        # Update window position and size
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+
+    def layoutChildWindows(self,width, height):
+        # Perform layout of child windows based on the resizing of the current window
+        for child in self.childWindows:
+            
+            if child.layoutAnchors & LayoutAnchor.left:
+                if child.layoutAnchors & LayoutAnchor.right:
+                    leftMargin = child.x 
+                    rightMargin = self.width - (child.x + child.width)
+                    child.width = max(width - leftMargin - rightMargin, MIN_WINDOW_WIDTH)
+                else : 
+                    leftMargin = child.x 
+                    newY = max(child.x + child.width, self.width)
+                    child.x = leftMargin
+
+            elif child.layoutAnchors & LayoutAnchor.right:
+                rightMargin = self.width - (child.x + child.width)
+                newX = width - child.width - rightMargin 
+                child.x = newX
+            elif child.layoutAnchors & LayoutAnchor.top:
+                topMargin = child.y 
+                if child.layoutAnchors & LayoutAnchor.bottom:
+                    bottomMargin = self.height - (child.y + child.height)
+                    newY = height - child.height - bottomMargin
+                    child.y = newY
+
+
+
     def addChildWindow(self, window):
         # add window to the end of childWindows list
         self.childWindows.append(window)
@@ -68,12 +110,21 @@ class Window:
         # [0, width] and [0, height] of the current window
         return 0 <= x <= self.width and 0 <= y <= self.height
 
-    def hitTestDecoration(self, x, y):
+    def hitTestTitleBar(self, x, y):
         # the given x, y are in a local corrdinate system
-        # check if x and y are within its decoration bounds
+        # check if x and y are within title bar
         # A window that has a decoration should be a Top-level window
         if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1":
+            
             return 0 <= x <= self.width and 0 <= y <= self.parentWindow.windowSystem.windowManager.titleBarHeight
+    
+    def hitTestResizeArea(self, x, y):
+        # the given x, y are in a local corrdinate system
+        # check if x and y are within resize area
+        # A window that has a decoration should be a Top-level window
+        if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1":
+            
+            return self.width -10 <= x <= self.width and self.height - 10 <= y <= self.height
 
     def convertPositionToScreen(self, x, y):
         localX = x
@@ -105,9 +156,12 @@ class Window:
 
         # Check if the window has a parent
         if self.parentWindow:
+            #Avoid being drawn outside the parent window
+            x = max(0,self.x)
+            y = max(0,self.y)
+
             # Convert the window's local origin to global coordinates
-            screenX, screenY = self.parentWindow.convertPositionToScreen(
-                self.x, self.y)
+            screenX, screenY = self.parentWindow.convertPositionToScreen(x, y)
         else:
             # If the window has no parent, its origin is already in global coordinates
             screenX = self.x
@@ -116,8 +170,11 @@ class Window:
         # Set the graphics context's origin to the global coordinates
         ctx.setOrigin(screenX, screenY)
 
+        #Avoid being drawn outside the parent window
+        width = min(self.width, self.parentWindow.width-self.x)
+        height = min(self.height, self.parentWindow.height-self.y)
         # Draw a filled rectangle in the window's local coordinate system
-        ctx.fillRect(0, 0, self.width, self.height)
+        ctx.fillRect(0, 0, width, height)
 
         # draw every child window
         for child in self.childWindows:
@@ -126,50 +183,7 @@ class Window:
     def handleMouseClicked(self, x, y):
         print("Window " + self.identifier + " was clicked.")
 
-    def resize(self, x, y, width, height) : 
-
-        # Apply minimum size constraints
-        width = max(width, MIN_WINDOW_WIDTH)
-        height = max(height, MIN_WINDOW_HEIGHT)
-        
-        # Update window position and size
-        self.x = x 
-        self.y = y 
-        self.width = width
-        self.height = height
-        
-        #reposition its child windows based on a size change
-        self.layoutChildWindows(width, height)
-
-    def layoutChildWindows(self, width, height):
-        # Perform layout of child windows based on the resizing of the current window
-        # Example implementation for anchoring child windows to the top-left corner
-        for child in self.childWindows:
-            
-            marginX = 0
-            marginY = 0
-
-            if child.layoutAnchors & LayoutAnchor.right:
-                marginX = self.width - child.width
-            
-            if child.layoutAnchors & LayoutAnchor.left:
-                marginX = 0
-            
-            if child.layoutAnchors & LayoutAnchor.bottom:
-                marginY = self.height - child.height
-            
-            if child.layoutAnchors & LayoutAnchor.top:
-                marginY = 0
-
-            
-            # Apply minimum size constraints
-            child.width = max(child.width, MIN_WINDOW_WIDTH)
-            child.height = max(child.height, MIN_WINDOW_HEIGHT)
-            
-            # Update child window position
-            child.x = self.x + marginX
-            child.y = self.y + marginY
-
+    
             
                     
 class Screen(Window):
@@ -185,16 +199,21 @@ class Screen(Window):
         # draw child window and decoration
         for child in self.childWindows:
             if not child.isHidden:
+                
                 child.draw(ctx)
                 self.windowSystem.windowManager.decorateWindow(child, ctx)
+                
+                
 
     def windowDecorationAtLocation(self, x, y):
         for child in reversed(self.childWindows):
             localX, localY = child.convertPositionFromScreen(x, y)
-            if child.hitTestDecoration(localX, localY):
-                return child
+            if child.hitTestTitleBar(localX, localY):
+                return child, False
+            elif child.hitTestResizeArea(localX, localY):
+                return child, True
 
-        return None
+        return None, False
     
    
     

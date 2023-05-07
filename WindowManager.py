@@ -31,6 +31,9 @@ class WindowManager:
                 titleBarColor = COLOR_BLUE
             else:
                 titleBarColor = COLOR_LIGHT_BLUE
+
+            ctx.setOrigin(window.x, window.y)
+
             ctx.setFillColor(titleBarColor)
             ctx.fillRect(0, 0, window.width, self.titleBarHeight)
             ctx.drawString(window.identifier, 4, 2)
