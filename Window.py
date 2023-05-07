@@ -23,6 +23,7 @@ class Window:
         self.parentWindow = None
 
         self.isHidden = False
+        self.taskbarIconX = None
 
     def addChildWindow(self, window):
         # add window to the end of childWindows list
@@ -30,11 +31,13 @@ class Window:
         # assign window parent
         window.parentWindow = self
 
+
     def removeFromParentWindow(self):
         # remove window from the childWindows list
         self.parentWindow.childWindows.remove(self)
         # set window parent to None
         self.parentWindow = None
+
 
     def childWindowAtLocation(self, x, y):
         # check if the current window contains the provided point
@@ -49,16 +52,19 @@ class Window:
                 # return the topmost child window found
                 if result:
                     return result
+                    return result
             # if no child window is found, return the current window
             return self
         else:
             return None
+
 
     def hitTest(self, x, y):
         # if x and y are in a local coordinate system
         # it's sufficient to check if x and y are within bounds
         # [0, width] and [0, height] of the current window
         return 0 <= x <= self.width and 0 <= y <= self.height
+
 
     def hitTestDecoration(self, x, y):
         # the given x, y are in a local corrdinate system
@@ -79,6 +85,7 @@ class Window:
             parentX = localX + self.x
             parentY = localY + self.y
             return self.parentWindow.convertPositionToScreen(parentX, parentY)
+        
 
     def convertPositionFromScreen(self, x, y):
         # if this window has no parent, return its coordinates as they are
@@ -91,6 +98,7 @@ class Window:
             localY = y - self.y
             return self.parentWindow.convertPositionFromScreen(localX, localY)
 
+
     def draw(self, ctx):
         # set to draw with the window's background color
         ctx.setFillColor(self.backgroundColor)
@@ -98,6 +106,8 @@ class Window:
         # Check if the window has a parent
         if self.parentWindow:
             # Convert the window's local origin to global coordinates
+            screenX, screenY = self.parentWindow.convertPositionToScreen(
+                self.x, self.y)
             screenX, screenY = self.parentWindow.convertPositionToScreen(
                 self.x, self.y)
         else:
@@ -115,8 +125,10 @@ class Window:
         for child in self.childWindows:
             child.draw(ctx)
 
+
     def handleMouseClicked(self, x, y):
         print("Window " + self.identifier + " was clicked.")
+
 
 
 class Screen(Window):
@@ -124,9 +136,11 @@ class Screen(Window):
         super().__init__(0, 0, windowSystem.width, windowSystem.height, "SCREEN_1")
         self.windowSystem = windowSystem
 
+
     def draw(self, ctx):
-        # draw wallpaper
+        # draw wallpaper and task bar
         self.windowSystem.windowManager.drawDesktop(ctx)
+        self.windowSystem.windowManager.drawTaskbar(ctx)
 
         # draw child window and decoration
         for child in self.childWindows:
@@ -134,10 +148,10 @@ class Screen(Window):
                 child.draw(ctx)
                 self.windowSystem.windowManager.decorateWindow(child, ctx)
 
+
     def windowDecorationAtLocation(self, x, y):
         for child in reversed(self.childWindows):
             localX, localY = child.convertPositionFromScreen(x, y)
             if child.hitTestDecoration(localX, localY):
                 return child
-
         return None
