@@ -136,10 +136,7 @@ class Window:
 
         # Check if the window has a parent
         if self.parentWindow:
-            # Avoid being drawn outside the parent window
-            x = max(0, self.x)
-            y = max(0, self.y)
-
+            
             # Convert the window's local origin to global coordinates
             screenX, screenY = self.parentWindow.convertPositionToScreen(self.x, self.y)
         else:
@@ -150,11 +147,8 @@ class Window:
         # Set the graphics context's origin to the global coordinates
         ctx.setOrigin(screenX, screenY)
 
-        # Avoid being drawn outside the parent window
-        width = min(self.width, self.parentWindow.width-self.x)
-        height = min(self.height, self.parentWindow.height-self.y)
         # Draw a filled rectangle in the window's local coordinate system
-        ctx.fillRect(0, 0, width, height)
+        ctx.fillRect(0, 0, self.width, self.height)
 
         # draw every child window
         for child in self.childWindows:

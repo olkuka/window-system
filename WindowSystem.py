@@ -23,17 +23,17 @@ class WindowSystem(GraphicsEventSystem):
         s3 = self.createWindowOnScreen(50, 50, 200, 200, "Second App")
         s3.backgroundColor = COLOR_YELLOW
 
-        s4 = self.createWindowOnScreen(300, 200, 200, 200, "My Third App")
+        s4 = self.createWindowOnScreen(300, 200, 300, 300, "My Third App")
         s4.backgroundColor = COLOR_PINK
 
-        # s4_1 = Window(10, 30, 200, 100, "SCREEN_3-1")
-        # s4.addChildWindow(s4_1)
-        # s4_1.backgroundColor = COLOR_BLACK
+        s4_1 = Window(10, 30, 200, 100, "SCREEN_3-1")
+        s4.addChildWindow(s4_1)
+        s4_1.backgroundColor = COLOR_BLACK
 
-        # s4_2 = Window(290, 290, 100, 100, "SCREEN_3-2")
-        # s4.addChildWindow(s4_2)
-        # s4_2.backgroundColor = COLOR_BLACK
-        # s4_2.layoutAnchors = LayoutAnchor.right | LayoutAnchor.bottom
+        s4_2 = Window(290, 290, 100, 100, "SCREEN_3-2")
+        s4.addChildWindow(s4_2)
+        s4_2.backgroundColor = COLOR_BLACK
+        s4_2.layoutAnchors = LayoutAnchor.right | LayoutAnchor.bottom
 
         # s4_3 = Window(150, 150, 100, 100, "SCREEN_3-3")
         # s4.addChildWindow(s4_3)
