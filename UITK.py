@@ -25,31 +25,42 @@ class Container(Widget):
         self.spacing = spacing
         self.children = []
 
+    # resize the container
     def resize(self, x, y, width, height):
         super().resize(x, y, width, height)
         self.layoutChildren()
 
+    # add a new child
     def addChild(self, child):
         self.children.append(child)
 
+    # remove a child
     def removeChild(self, child):
         self.children.remove(child)
         self.layoutChildren()
 
     def layoutChildren(self):
         if self.axis == 'horizontal':
+            # calculate the total width of the container taking its children and spacing into account
             totalWidth = sum([child.width for child in self.children]
                              ) + self.spacing * (len(self.children) - 1)
+            # set a new x coordinate
             x = self.originX + (self.width - totalWidth) // 2
             y = self.originY
+
+            # resize each children recursively and take care of the spacing
             for child in self.children:
                 child.resize(x, y, child.width, child.height)
                 x += child.width + self.spacing
+
         elif self.axis == 'vertical':
+            # calculate the total height of the container taking its children and spacing into account
             totalHeight = sum([child.height for child in self.children]
                               ) + self.spacing * (len(self.children) - 1)
             x = self.originX
+            # set a new y coordinate
             y = self.originY + (self.height - totalHeight) // 2
+            # resize each children recursively and take care of the spacing
             for child in self.children:
                 child.resize(x, y, child.width, child.height)
                 y += child.height + self.spacing
