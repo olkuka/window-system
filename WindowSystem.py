@@ -9,6 +9,7 @@ by
 from GraphicsEventSystem import *
 from Window import *
 from WindowManager import *
+from UITK import *
 
 
 class WindowSystem(GraphicsEventSystem):
@@ -26,14 +27,19 @@ class WindowSystem(GraphicsEventSystem):
         s4 = self.createWindowOnScreen(300, 200, 300, 300, "My Third App")
         s4.backgroundColor = COLOR_PINK
 
-        s4_1 = Window(10, 30, 200, 100, "SCREEN_3-1")
-        s4.addChildWindow(s4_1)
-        s4_1.backgroundColor = COLOR_BLACK
+        # s4_1 = Window(10, 30, 200, 100, "SCREEN_3-1")
+        # s4.addChildWindow(s4_1)
+        # s4_1.backgroundColor = COLOR_BLACK
 
-        s4_2 = Window(290, 290, 100, 100, "SCREEN_3-2")
-        s4.addChildWindow(s4_2)
-        s4_2.backgroundColor = COLOR_BLACK
-        s4_2.layoutAnchors = LayoutAnchor.right | LayoutAnchor.bottom
+        Label1 = Label(0,30,100,100, "Label 1","hi",COLOR_WHITE)
+        s4.addChildWindow(Label1)
+
+        btn1 = Button(100,100,51,51,"Btn1","print",COLOR_GRAY,lambda : print("clicked!"))
+        s4.addChildWindow(btn1)
+        # s4_2 = Window(290, 290, 100, 100, "SCREEN_3-2")
+        # s4.addChildWindow(s4_2)
+        # s4_2.backgroundColor = COLOR_BLACK
+        # s4_2.layoutAnchors = LayoutAnchor.right | LayoutAnchor.bottom
 
         # s4_3 = Window(150, 150, 100, 100, "SCREEN_3-3")
         # s4.addChildWindow(s4_3)
@@ -85,6 +91,14 @@ class WindowSystem(GraphicsEventSystem):
         self.mousePressX = x
         self.mousePressY = y
 
+        # check the window at the given location
+        window = self.screen.childWindowAtLocation(x, y)
+        
+        if type(window) is Button: 
+            window.BtnState = BtnState.Pressed
+            self.requestRepaint()
+        
+
     def handleMouseReleased(self, x, y):
         # check if the mouse release coordinates match the mouse press coordinates
         if x == self.mousePressX and y == self.mousePressY:
@@ -115,14 +129,38 @@ class WindowSystem(GraphicsEventSystem):
                 if windowClicked:
                     # bring it to the front and request paint
                     self.bringWindowToFront(windowClicked)
+
+                    if type(windowClicked) is Button: 
+                        windowClicked.action()
+                        windowClicked.BtnState = BtnState.Hovering
                     self.requestRepaint()
                     # propagate the click event to the window
                     windowClicked.handleMouseClicked(x, y)
                 else:
                     self.screen.handleMouseClicked(x, y)
-
+    
     def handleMouseMoved(self, x, y):
-        pass
+        # check the window at the given location
+        window = self.screen.childWindowAtLocation(x, y)
+        self.setAllBtnNormal(self.screen)
+        if type(window) is Button: 
+            window.BtnState = BtnState.Hovering
+        # else :
+        #     self.setAllBtnNormal(self.screen)
+
+        self.requestRepaint()
+       
+        
+    def setAllBtnNormal(self,window):
+
+            for child in window.childWindows :
+                if type(child) is Button: 
+                    child.BtnState = BtnState.Normal
+
+                self.setAllBtnNormal(child)
+            
+    
+                  
 
     def handleMouseDragged(self, x, y):
         # check if user pressed on the title bar
