@@ -36,6 +36,7 @@ class WindowSystem(GraphicsEventSystem):
 
         btn1 = Button(100,100,51,51,"Btn1","print",COLOR_GRAY,lambda : print("clicked!"))
         s4.addChildWindow(btn1)
+
         # s4_2 = Window(290, 290, 100, 100, "SCREEN_3-2")
         # s4.addChildWindow(s4_2)
         # s4_2.backgroundColor = COLOR_BLACK
