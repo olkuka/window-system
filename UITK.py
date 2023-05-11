@@ -81,6 +81,15 @@ class Slider(Widget):
         super().__init__(originX, originY, width, height, identifier)
         self.backgroundColor = backgroundColor
 
+        # handle properties
+        self.handleX = min(6, self.width)  # handle X coordinate
+        self.handleY = min(6, self.height)  # handle Y coordinate
+        self.handleWidth = self.width//6
+        self.handleHeight = self.height//2
+        self.isHandlePressed = False  # if the slider is currently pressed
+
+        self.value = 0  # sliders value
+
     def draw(self, ctx):
         # draw the background
         super().draw(ctx)
@@ -89,7 +98,7 @@ class Slider(Widget):
         borderX1 = 5
         borderX2 = max(borderX1, self.width - borderX1)
         borderY1 = 5
-        borderY2 = max(borderY1, self.height - borderY1)
+        borderY2 = max(borderY1, borderY1 + self.handleHeight)
         ctx.setFillColor('#CECECE')
         ctx.fillRect(borderX1, borderY1, borderX2, borderY2)
         ctx.setStrokeColor(COLOR_GRAY)
@@ -99,16 +108,27 @@ class Slider(Widget):
         ctx.drawLine(borderX1, borderY2, borderX2, borderY2)
         ctx.drawLine(borderX2, borderY1, borderX2, borderY2)
 
-        # draw slider white rectangle and its borders
-        sliderWidth = self.width//6
-        ctx.setFillColor(COLOR_WHITE)
-        ctx.fillRect(borderX1+1, borderY1+1, borderX1 +
-                     sliderWidth-1, borderY2+1)
+        # draw the handle and its borders
+        if self.isHandlePressed:
+            ctx.setFillColor(COLOR_DARK_BLUE)
+        else:
+            ctx.setFillColor(COLOR_WHITE)
+
+        ctx.fillRect(self.handleX, self.handleY, self.handleX +
+                     self.handleWidth, self.handleY + self.handleHeight)
         ctx.setStrokeColor(COLOR_LIGHT_GRAY)
-        ctx.drawLine(borderX1+1, borderY1+2, borderX1 +
-                     sliderWidth-1, borderY1+2)
-        ctx.drawLine(borderX1+2, borderY1+1, borderX1+2, borderY2+1)
+        ctx.drawLine(self.handleX, self.handleY, self.handleX +
+                     self.handleWidth, self.handleY)
+        ctx.drawLine(self.handleX, self.handleY, self.handleX,
+                     self.handleY + self.handleHeight)
         ctx.setStrokeColor(COLOR_GRAY)
-        ctx.drawLine(borderX1+1, borderY2-1, borderX1+sliderWidth, borderY2-1)
-        ctx.drawLine(borderX1+sliderWidth-1, borderY1+2,
-                     borderX1+sliderWidth-1, borderY2-1)
+        ctx.drawLine(self.handleX, self.handleY + self.handleHeight,
+                     self.handleX+self.handleWidth, self.handleY + self.handleHeight)
+        ctx.drawLine(self.handleX+self.handleWidth, self.handleY,
+                     self.handleX+self.handleWidth, self.handleY + self.handleHeight)
+
+    # doesnt work yet
+    def checkHandlePressed(self, x, y):
+        print(self.handleX, x-self.x, self.handleX + self.handleWidth)
+        print(self.handleX <= x-self.x <= self.handleX + self.handleWidth and self.handleY <= y-self.y <= self.handleY + self.height)
+        return self.handleX <= x-self.x <= self.handleX + self.handleWidth and self.handleY <= y-self.y <= self.handleY + self.height

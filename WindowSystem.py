@@ -38,7 +38,7 @@ class WindowSystem(GraphicsEventSystem):
                       COLOR_GRAY, lambda: print("clicked!"))
         s4.addChildWindow(btn1)
 
-        slider = Slider(30, 30, 150, 25, 'Slider 1')
+        slider = Slider(30, 30, 250, 100, 'Slider 1')
         s3.addChildWindow(slider)
         # s4_2 = Window(290, 290, 100, 100, "SCREEN_3-2")
         # s4.addChildWindow(s4_2)
@@ -102,6 +102,10 @@ class WindowSystem(GraphicsEventSystem):
             window.BtnState = BtnState.Pressed
             self.requestRepaint()
 
+        elif type(window) is Slider and window.checkHandlePressed(x, y):
+            window.isHandlePressed = True
+            self.requestRepaint()
+
     def handleMouseReleased(self, x, y):
         # check if the mouse release coordinates match the mouse press coordinates
         if x == self.mousePressX and y == self.mousePressY:
@@ -137,6 +141,11 @@ class WindowSystem(GraphicsEventSystem):
                     if type(windowClicked) is Button:
                         windowClicked.action()
                         windowClicked.BtnState = BtnState.Hovering
+
+                    elif type(windowClicked) is Slider:
+                        windowClicked.isHandlePressed = False
+                        self.requestRepaint()
+
                     self.requestRepaint()
                     # propagate the click event to the window
                     windowClicked.handleMouseClicked(x, y)
