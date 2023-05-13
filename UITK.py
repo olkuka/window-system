@@ -12,11 +12,7 @@ from Window import *
 import enum
 
 
-
 class Widget(Window):
-    def __init__(self, originX, originY, width, height, identifier):
-        super().__init__(originX, originY, width, height, identifier)
-        self.backgroundColor = COLOR_CLEAR
     def __init__(self, originX, originY, width, height, identifier):
         super().__init__(originX, originY, width, height, identifier)
         self.backgroundColor = COLOR_CLEAR
@@ -77,18 +73,6 @@ class Label(Widget):
         self.normalColor = backgroundColor
         self.backgroundColor = self.normalColor
         self.text = text
-    def __init__(self, originX, originY, width, height, identifier, text, backgroundColor):
-        super().__init__(originX, originY, width, height, identifier)
-
-        self.normalColor = backgroundColor
-        self.backgroundColor = self.normalColor
-        self.text = text
-
-    def draw(self, ctx):
-        super().draw(ctx)
-        ctx.setFont(None)
-        ctx.setStrokeColor(COLOR_BLACK)
-        ctx.drawString(self.text, 0, 0)
 
     def draw(self, ctx):
         super().draw(ctx)
@@ -191,5 +175,5 @@ class Slider(Widget):
             # update slider's value based on a current handle position
             self.value = (self.handleX - self.innerX1) / \
                 (self.innerX2 - self.innerX1 - self.handleWidth)
-        else: 
+        else:
             self.isHandlePressed = False

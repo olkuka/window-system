@@ -156,23 +156,12 @@ class WindowSystem(GraphicsEventSystem):
             window.BtnState = BtnState.Hovering
         # else :
         #     self.setAllBtnNormal(self.screen)
-
         self.requestRepaint()
 
     def setAllBtnNormal(self, window):
-
         for child in window.childWindows:
             if type(child) is Button:
                 child.BtnState = BtnState.Normal
-
-    def setAllBtnNormal(self, window):
-
-        for child in window.childWindows:
-            if type(child) is Button:
-                child.BtnState = BtnState.Normal
-
-            self.setAllBtnNormal(child)
-
             self.setAllBtnNormal(child)
 
     def handleMouseDragged(self, x, y):

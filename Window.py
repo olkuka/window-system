@@ -131,7 +131,6 @@ class Window:
 
         # Check if the window has a parent
         if self.parentWindow:
-
             # Convert the window's local origin to global coordinates
             screenX, screenY = self.parentWindow.convertPositionToScreen(
                 self.x, self.y)
