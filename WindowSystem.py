@@ -126,9 +126,12 @@ class WindowSystem(GraphicsEventSystem):
                 self.requestRepaint()
 
             # if a window taskbar icon is clicked, Window Manager handles the event
+            # if a window taskbar icon is clicked, Window Manager handles the event
             elif windowTaskbarIconClicked:
                 # set isHidden property to False and call handleMouseClicked to bring the window to the front
                 windowTaskbarIconClicked.isHidden = False
+                self.windowManager.handleMouseClicked(
+                    windowTaskbarIconClicked, 0, 0)
                 self.windowManager.handleMouseClicked(
                     windowTaskbarIconClicked, 0, 0)
                 self.requestRepaint()
@@ -151,6 +154,7 @@ class WindowSystem(GraphicsEventSystem):
                 else:
                     self.screen.handleMouseClicked(x, y)
 
+
     def handleMouseMoved(self, x, y):
         # check the window at the given location
         window = self.screen.childWindowAtLocation(x, y)
@@ -167,6 +171,14 @@ class WindowSystem(GraphicsEventSystem):
         for child in window.childWindows:
             if type(child) is Button:
                 child.BtnState = BtnState.Normal
+
+    def setAllBtnNormal(self, window):
+
+        for child in window.childWindows:
+            if type(child) is Button:
+                child.BtnState = BtnState.Normal
+
+            self.setAllBtnNormal(child)
 
             self.setAllBtnNormal(child)
 
