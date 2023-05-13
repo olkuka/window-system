@@ -187,10 +187,12 @@ class WindowSystem(GraphicsEventSystem):
 
             # calculate new window size based on above distances
             newWidth = max(windowDecoration.width + deltaX, MIN_WINDOW_WIDTH)
-            newHeight = max(windowDecoration.height + deltaY, MIN_WINDOW_HEIGHT)
+            newHeight = max(windowDecoration.height +
+                            deltaY, MIN_WINDOW_HEIGHT)
 
             if isResizeble:
-                windowDecoration.resize(windowDecoration.x, windowDecoration.y, newWidth, newHeight)
+                windowDecoration.resize(
+                    windowDecoration.x, windowDecoration.y, newWidth, newHeight)
 
             # if the new position of the window is within the valid bounds
             elif self.windowManager.checkWindowPosition(windowDecoration, newX, newY):
@@ -204,7 +206,7 @@ class WindowSystem(GraphicsEventSystem):
         elif type(window) is Slider:
             # calculate new handle coordinates based on above distances
             localX, _ = window.convertPositionFromScreen(x, y)
-            window.slideHandle(localX) 
+            window.slideHandle(localX)
             self.requestRepaint()
 
         # save current coordinates, so they can be used in the next drag to calculate the distance

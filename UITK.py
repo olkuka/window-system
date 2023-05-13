@@ -122,11 +122,12 @@ class Slider(Widget):
     # check if x and y coordinates are on the slider's handle
     def checkHandlePressed(self, x, y):
         return 0 <= x - self.handleX <= self.handleWidth and 0 <= y - self.handleY <= self.height
-    
+
     def slideHandle(self, newX):
-        # check if the new X coordinate is within the inner rectangle 
+        # check if the new X coordinate is within the inner rectangle
         if self.innerX1 <= newX <= self.innerX2 - self.handleWidth:
             # assign new X coordinate
             self.handleX = newX
             # update slider's value based on a current handle position
-            self.value = (self.handleX - self.innerX1) / (self.innerX2 - self.innerX1 - self.handleWidth)
+            self.value = (self.handleX - self.innerX1) / \
+                (self.innerX2 - self.innerX1 - self.handleWidth)
