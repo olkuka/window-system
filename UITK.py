@@ -88,6 +88,12 @@ class Slider(Widget):
         self.handleHeight = self.height//2
         self.isHandlePressed = False  # if the slider is currently pressed
 
+        # inner rectangle coordinates
+        self.innerX1 = 5
+        self.innerX2 = max(self.innerX1, self.width - self.innerX1)
+        self.innerY1 = 5
+        self.innerY2 = max(self.innerY1, self.innerY1 + self.handleHeight)
+
         self.value = 0  # sliders value
 
     def draw(self, ctx):
@@ -95,18 +101,14 @@ class Slider(Widget):
         super().draw(ctx)
 
         # draw the inner rectangle and its borders
-        borderX1 = 5
-        borderX2 = max(borderX1, self.width - borderX1)
-        borderY1 = 5
-        borderY2 = max(borderY1, borderY1 + self.handleHeight)
         ctx.setFillColor('#CECECE')
-        ctx.fillRect(borderX1, borderY1, borderX2, borderY2)
+        ctx.fillRect(self.innerX1, self.innerY1, self.innerX2, self.innerY2)
         ctx.setStrokeColor(COLOR_GRAY)
-        ctx.drawLine(borderX1, borderY1, borderX2, borderY1)
-        ctx.drawLine(borderX1, borderY1, borderX1, borderY2)
+        ctx.drawLine(self.innerX1, self.innerY1, self.innerX2, self.innerY1)
+        ctx.drawLine(self.innerX1, self.innerY1, self.innerX1, self.innerY2)
         ctx.setStrokeColor(COLOR_WHITE)
-        ctx.drawLine(borderX1, borderY2, borderX2, borderY2)
-        ctx.drawLine(borderX2, borderY1, borderX2, borderY2)
+        ctx.drawLine(self.innerX1, self.innerY2, self.innerX2, self.innerY2)
+        ctx.drawLine(self.innerX2, self.innerY1, self.innerX2, self.innerY2)
 
         # draw the handle and its borders
         if self.isHandlePressed:
@@ -116,19 +118,15 @@ class Slider(Widget):
 
         ctx.fillRect(self.handleX, self.handleY, self.handleX +
                      self.handleWidth, self.handleY + self.handleHeight)
-        ctx.setStrokeColor(COLOR_LIGHT_GRAY)
-        ctx.drawLine(self.handleX, self.handleY, self.handleX +
-                     self.handleWidth, self.handleY)
-        ctx.drawLine(self.handleX, self.handleY, self.handleX,
-                     self.handleY + self.handleHeight)
-        ctx.setStrokeColor(COLOR_GRAY)
-        ctx.drawLine(self.handleX, self.handleY + self.handleHeight,
-                     self.handleX+self.handleWidth, self.handleY + self.handleHeight)
-        ctx.drawLine(self.handleX+self.handleWidth, self.handleY,
-                     self.handleX+self.handleWidth, self.handleY + self.handleHeight)
 
-    # doesnt work yet
+    # check if x and y coordinates are on the slider's handle
     def checkHandlePressed(self, x, y):
-        print(self.handleX, x-self.x, self.handleX + self.handleWidth)
-        print(self.handleX <= x-self.x <= self.handleX + self.handleWidth and self.handleY <= y-self.y <= self.handleY + self.height)
-        return self.handleX <= x-self.x <= self.handleX + self.handleWidth and self.handleY <= y-self.y <= self.handleY + self.height
+        return 0 <= x - self.handleX <= self.handleWidth and 0 <= y - self.handleY <= self.height
+    
+    def slideHandle(self, newX):
+        # check if the new X coordinate is within the inner rectangle 
+        if self.innerX1 <= newX <= self.innerX2 - self.handleWidth:
+            # assign new X coordinate
+            self.handleX = newX
+            # update slider's value based on a current handle position
+            self.value = (self.handleX - self.innerX1) / (self.innerX2 - self.innerX1 - self.handleWidth)

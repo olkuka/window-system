@@ -21,7 +21,7 @@ class WindowSystem(GraphicsEventSystem):
         s2 = self.createWindowOnScreen(10, 10, 200, 200, "First App")
         s2.backgroundColor = COLOR_GREEN
 
-        s3 = self.createWindowOnScreen(50, 50, 200, 200, "Second App")
+        s3 = self.createWindowOnScreen(50, 50, 500, 200, "Second App")
         s3.backgroundColor = COLOR_YELLOW
 
         s4 = self.createWindowOnScreen(300, 200, 300, 300, "My Third App")
@@ -97,14 +97,17 @@ class WindowSystem(GraphicsEventSystem):
 
         # check the window at the given location
         window = self.screen.childWindowAtLocation(x, y)
+        self.bringWindowToFront(window)
 
         if type(window) is Button:
             window.BtnState = BtnState.Pressed
-            self.requestRepaint()
 
-        elif type(window) is Slider and window.checkHandlePressed(x, y):
-            window.isHandlePressed = True
-            self.requestRepaint()
+        elif type(window) is Slider:
+            localX, localY = window.convertPositionFromScreen(x, y)
+            if window.checkHandlePressed(localX, localY):
+                window.isHandlePressed = True
+
+        self.requestRepaint()
 
     def handleMouseReleased(self, x, y):
         # check if the mouse release coordinates match the mouse press coordinates
@@ -135,16 +138,12 @@ class WindowSystem(GraphicsEventSystem):
 
                 # if there exists a window at the given location
                 if windowClicked:
-                    # bring it to the front and request paint
-                    self.bringWindowToFront(windowClicked)
-
                     if type(windowClicked) is Button:
                         windowClicked.action()
                         windowClicked.BtnState = BtnState.Hovering
 
                     elif type(windowClicked) is Slider:
                         windowClicked.isHandlePressed = False
-                        self.requestRepaint()
 
                     self.requestRepaint()
                     # propagate the click event to the window
@@ -173,34 +172,39 @@ class WindowSystem(GraphicsEventSystem):
 
     def handleMouseDragged(self, x, y):
         # check if user pressed on the title bar
-        window, isResizeble = self.screen.windowDecorationAtLocation(
+        windowDecoration, isResizeble = self.screen.windowDecorationAtLocation(
             self.mousePressX, self.mousePressY)
+        window = self.screen.childWindowAtLocation(x, y)
 
-        if window:
-            # make chosen window a top-level window
-            self.bringWindowToFront(window)
+        if windowDecoration:
             # calculate the distances between previous and current mouse locations
             deltaX = x - self.mousePressX
             deltaY = y - self.mousePressY
 
             # calculate new window coordinates based on above distances
-            newX = window.x + deltaX
-            newY = window.y + deltaY
+            newX = windowDecoration.x + deltaX
+            newY = windowDecoration.y + deltaY
 
             # calculate new window size based on above distances
-            newWidth = max(window.width + deltaX, MIN_WINDOW_WIDTH)
-            newHeight = max(window.height + deltaY, MIN_WINDOW_HEIGHT)
+            newWidth = max(windowDecoration.width + deltaX, MIN_WINDOW_WIDTH)
+            newHeight = max(windowDecoration.height + deltaY, MIN_WINDOW_HEIGHT)
 
             if isResizeble:
-                window.resize(window.x, window.y, newWidth, newHeight)
+                windowDecoration.resize(windowDecoration.x, windowDecoration.y, newWidth, newHeight)
 
             # if the new position of the window is within the valid bounds
-            elif self.windowManager.checkWindowPosition(window, newX, newY):
+            elif self.windowManager.checkWindowPosition(windowDecoration, newX, newY):
                 # set window coordinates to the new ones
-                window.x = newX
-                window.y = newY
+                windowDecoration.x = newX
+                windowDecoration.y = newY
 
             # request a repaint
+            self.requestRepaint()
+
+        elif type(window) is Slider:
+            # calculate new handle coordinates based on above distances
+            localX, _ = window.convertPositionFromScreen(x, y)
+            window.slideHandle(localX) 
             self.requestRepaint()
 
         # save current coordinates, so they can be used in the next drag to calculate the distance
