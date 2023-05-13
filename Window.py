@@ -92,7 +92,6 @@ class Window:
         # check if x and y are within title bar
         # A window that has a decoration should be a Top-level window
         if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1":
-
             return 0 <= x <= self.width and 0 <= y <= self.parentWindow.windowSystem.windowManager.titleBarHeight
 
     def hitTestResizeArea(self, x, y):
@@ -100,7 +99,6 @@ class Window:
         # check if x and y are within resize area
         # A window that has a decoration should be a Top-level window
         if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1":
-
             return self.width - 10 <= x <= self.width and self.height - 10 <= y <= self.height
 
     def convertPositionToScreen(self, x, y):

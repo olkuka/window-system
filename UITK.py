@@ -113,24 +113,7 @@ class Button(Label):
             self.backgroundColor = COLOR_DARK_BLUE
 
         super().draw(ctx)
-    def draw(self, ctx):
-        if self.BtnState == BtnState.Normal:
-            self.backgroundColor = self.normalColor
-        if self.BtnState == BtnState.Hovering:
-            self.backgroundColor = COLOR_BLUE
-        if self.BtnState == BtnState.Pressed:
-            self.backgroundColor = COLOR_DARK_BLUE
 
-        super().draw(ctx)
-
-        # draw a button's frame
-        ctx.setStrokeColor(COLOR_WHITE)
-        ctx.drawLine(0, 0, self.width, 0)
-        ctx.drawLine(0, 0, 0, self.height)
-
-        ctx.setStrokeColor(COLOR_GRAY)
-        ctx.drawLine(self.width-1, 0, self.width-1, self.height)
-        ctx.drawLine(0, self.height, self.width-1, self.height)
         # draw a button's frame
         ctx.setStrokeColor(COLOR_WHITE)
         ctx.drawLine(0, 0, self.width, 0)
@@ -143,10 +126,6 @@ class Button(Label):
         ctx.setStrokeColor(COLOR_BLACK)
         ctx.drawLine(self.width, 0, self.width, self.height)
         ctx.drawLine(0, self.height, self.width, self.height)
-        ctx.setStrokeColor(COLOR_BLACK)
-        ctx.drawLine(self.width, 0, self.width, self.height)
-        ctx.drawLine(0, self.height, self.width, self.height)
-
 
 
 # Using enum class to define the possible states of a button widget.
@@ -154,6 +133,7 @@ class BtnState(enum.Enum):
     Normal = 1
     Hovering = 2
     Pressed = 3
+
 
 class Slider(Widget):
     def __init__(self, originX, originY, width, height, identifier, backgroundColor=COLOR_LIGHT_GRAY):
@@ -205,8 +185,11 @@ class Slider(Widget):
     def slideHandle(self, newX):
         # check if the new X coordinate is within the inner rectangle
         if self.innerX1 <= newX <= self.innerX2 - self.handleWidth:
+            self.isHandlePressed = True
             # assign new X coordinate
             self.handleX = newX
             # update slider's value based on a current handle position
             self.value = (self.handleX - self.innerX1) / \
                 (self.innerX2 - self.innerX1 - self.handleWidth)
+        else: 
+            self.isHandlePressed = False

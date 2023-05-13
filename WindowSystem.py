@@ -132,8 +132,6 @@ class WindowSystem(GraphicsEventSystem):
                 windowTaskbarIconClicked.isHidden = False
                 self.windowManager.handleMouseClicked(
                     windowTaskbarIconClicked, 0, 0)
-                self.windowManager.handleMouseClicked(
-                    windowTaskbarIconClicked, 0, 0)
                 self.requestRepaint()
             else:
                 # check the window at the given location
@@ -144,16 +142,11 @@ class WindowSystem(GraphicsEventSystem):
                     if type(windowClicked) is Button:
                         windowClicked.action()
                         windowClicked.BtnState = BtnState.Hovering
-
-                    elif type(windowClicked) is Slider:
-                        windowClicked.isHandlePressed = False
-
-                    self.requestRepaint()
+                        self.requestRepaint()
                     # propagate the click event to the window
                     windowClicked.handleMouseClicked(x, y)
                 else:
                     self.screen.handleMouseClicked(x, y)
-
 
     def handleMouseMoved(self, x, y):
         # check the window at the given location
