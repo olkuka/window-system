@@ -73,11 +73,12 @@ class Label(Widget):
         self.normalColor = backgroundColor
         self.backgroundColor = self.normalColor
         self.text = text
+        self.textColor = COLOR_BLACK
 
     def draw(self, ctx):
         super().draw(ctx)
         ctx.setFont(None)
-        ctx.setStrokeColor(COLOR_BLACK)
+        ctx.setStrokeColor(self.textColor)
         ctx.drawString(self.text, 0, 0)
 
 

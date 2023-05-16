@@ -10,6 +10,7 @@ from GraphicsEventSystem import *
 from Window import *
 from WindowManager import *
 from UITK import *
+from Apps import *
 
 
 class WindowSystem(GraphicsEventSystem):
@@ -24,7 +25,7 @@ class WindowSystem(GraphicsEventSystem):
         s3 = self.createWindowOnScreen(50, 50, 500, 200, "Second App")
         s3.backgroundColor = COLOR_YELLOW
 
-        s4 = self.createWindowOnScreen(300, 200, 300, 300, "My Third App")
+        s4 = self.createWindowOnScreen(300, 200, 400, 400, "My Third App")
         s4.backgroundColor = COLOR_PINK
 
         # s4_1 = Window(10, 30, 200, 100, "SCREEN_3-1")
@@ -40,16 +41,33 @@ class WindowSystem(GraphicsEventSystem):
 
         slider = Slider(30, 30, 250, 100, 'Slider 1')
         s3.addChildWindow(slider)
-        # s4_2 = Window(290, 290, 100, 100, "SCREEN_3-2")
-        # s4.addChildWindow(s4_2)
-        # s4_2.backgroundColor = COLOR_BLACK
-        # s4_2.layoutAnchors = LayoutAnchor.right | LayoutAnchor.bottom
 
-        # s4_3 = Window(150, 150, 100, 100, "SCREEN_3-3")
-        # s4.addChildWindow(s4_3)
-        # s4_3.backgroundColor = COLOR_BLACK
-        # s4_3.layoutAnchors = LayoutAnchor.left | LayoutAnchor.right
+        s4_2 = Window(10, 20, 10, 10, "SCREEN_3-2")
+        s4.addChildWindow(s4_2)
+        s4_2.backgroundColor = COLOR_BLACK
+        s4_2.layoutAnchors = LayoutAnchor.left | LayoutAnchor.top
 
+      
+        s4_3 = Window(380, 380, 10, 10, "SCREEN_3-3")
+        s4.addChildWindow(s4_3)
+        s4_3.backgroundColor = COLOR_BLACK
+        s4_3.layoutAnchors = LayoutAnchor.right | LayoutAnchor.bottom
+
+        s4_4 = Window(200, 380, 10, 10, "SCREEN_3-4")
+        s4.addChildWindow(s4_4)
+        s4_4.backgroundColor = COLOR_BLACK
+        s4_4.layoutAnchors = LayoutAnchor.bottom
+
+        s4_5 = Window(10, 200, 10, 10, "SCREEN_3-5")
+        s4.addChildWindow(s4_5)
+        s4_5.backgroundColor = COLOR_BLACK
+        s4_5.layoutAnchors = LayoutAnchor.left
+
+        helloWorld = HelloWorld(0,0,500,500,"1")
+        s2.addChildWindow(helloWorld)
+
+
+        
     """
     WINDOW MANAGEMENT
     """
@@ -154,14 +172,16 @@ class WindowSystem(GraphicsEventSystem):
         self.setAllBtnNormal(self.screen)
         if type(window) is Button:
             window.BtnState = BtnState.Hovering
+            self.requestRepaint()
         # else :
         #     self.setAllBtnNormal(self.screen)
-        self.requestRepaint()
+        
 
     def setAllBtnNormal(self, window):
         for child in window.childWindows:
-            if type(child) is Button:
+            if type(child) is Button and child.BtnState is not BtnState.Normal:
                 child.BtnState = BtnState.Normal
+                self.requestRepaint()
             self.setAllBtnNormal(child)
 
     def handleMouseDragged(self, x, y):
