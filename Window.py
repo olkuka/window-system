@@ -37,12 +37,44 @@ class Window:
         # apply minimum size constraints
         width = max(width, MIN_WINDOW_WIDTH)
         height = max(height, MIN_WINDOW_HEIGHT)
+        
+        rightMargin, bottomMargin = 0, 0
+        if x + width > self.width:
+            rightMargin = x + width - self.width
+        if y + height > self.height:
+            bottomMargin = y + height - self.height
 
         # set new coordinates, width and height
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+
+        for child in self.childWindows:
+            # if child.layoutAnchors & LayoutAnchor.top and child.layoutAnchors & LayoutAnchor.right:
+            #     child.x = self.x + self.width - child.width - rightMargin
+
+            if child.layoutAnchors & LayoutAnchor.right:
+                child.x = self.x + self.width - child.width - rightMargin
+
+            if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.right:
+                child.x = self.x + self.width - child.width - rightMargin
+                child.y = self.y + self.height - child.height - bottomMargin
+
+            if child.layoutAnchors & LayoutAnchor.bottom:
+                child.y = self.y + self.height - child.height - bottomMargin
+
+            if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.left:
+                child.y = self.y + self.height - child.height - bottomMargin
+
+            if child.layoutAnchors & LayoutAnchor.left and child.layoutAnchors & LayoutAnchor.right:
+                # child.y = self.y + self.height - child.height - bottomMargin
+                child.width = max(width - child.x - rightMargin, MIN_WINDOW_WIDTH)
+
+            if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.top:
+                child.y = self.height - child.height - bottomMargin
+
+
 
     def addChildWindow(self, window):
         # add window to the end of childWindows list
