@@ -144,7 +144,9 @@ class WindowSystem(GraphicsEventSystem):
                     if type(windowClicked) is Button:
                         windowClicked.action()
                         windowClicked.BtnState = BtnState.Hovering
-                        self.requestRepaint()
+                    elif type(windowClicked) is Slider:
+                        windowClicked.isHandlePressed = False
+                    self.requestRepaint()
                     # propagate the click event to the window
                     windowClicked.handleMouseClicked(x, y)
                 else:
