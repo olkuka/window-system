@@ -23,43 +23,34 @@ class Container(Widget):
         super().__init__(originX, originY, width, height, identifier)
         self.axis = axis
         self.spacing = spacing
-        self.children = []
+        
 
     # resize the container
     def resize(self, x, y, width, height):
         super().resize(x, y, width, height)
         self.layoutChildren()
 
-    # add a new child
-    def addChild(self, child):
-        self.children.append(child)
-
-    # remove a child
-    def removeChild(self, child):
-        self.children.remove(child)
-        self.layoutChildren()
-
     def layoutChildren(self):
         if self.axis == 'horizontal':
             # calculate the total width of the container taking its children and spacing into account
-            totalWidth = sum([child.width for child in self.children]
-                             ) + self.spacing * (len(self.children) - 1)
+            totalWidth = sum([child.width for child in self.childWindows]
+                             ) + self.spacing * (len(self.childWindows) - 1)
             # set a new x coordinate
-            x = self.originX + (self.width - totalWidth) // 2
-            y = self.originY
+            x = self.x + (self.width - totalWidth) // 2
+            y = self.y
 
             # resize each children recursively and take care of the spacing
-            for child in self.children:
+            for child in self.childWindows:
                 child.resize(x, y, child.width, child.height)
                 x += child.width + self.spacing
 
         elif self.axis == 'vertical':
             # calculate the total height of the container taking its children and spacing into account
-            totalHeight = sum([child.height for child in self.children]
-                              ) + self.spacing * (len(self.children) - 1)
-            x = self.originX
+            totalHeight = sum([child.height for child in self.childWindows]
+                              ) + self.spacing * (len(self.childWindows) - 1)
+            x = self.x
             # set a new y coordinate
-            y = self.originY + (self.height - totalHeight) // 2
+            y = self.y + (self.height - totalHeight) // 2
             # resize each children recursively and take care of the spacing
             for child in self.children:
                 child.resize(x, y, child.width, child.height)

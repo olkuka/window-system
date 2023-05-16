@@ -21,6 +21,7 @@ class HelloWorld(App) :
        
         self.greetingText = Label(self.width/2, 30, 50, 50, "text", "Hello", COLOR_CLEAR)
         self.germanBtn = Button(50, 60, 51, 51, "Btn1", "print", COLOR_GRAY, lambda: print("clicked!"))
+       
         self.addChildWindow(self.greetingText)
         self.addChildWindow(self.germanBtn)
    
