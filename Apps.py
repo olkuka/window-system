@@ -61,37 +61,36 @@ class Colors(Widget):
     def __init__(self, originX, originY, width, height, titleBarHeight):
         super().__init__(originX, originY, width, height, 'Colors')
         self.backgroundColor = COLOR_LIGHT_GREEN
-        self.addComponents(titleBarHeight)
+        self.container = Container(0, 15, width, height, "ColorsContainer",'vertical', 30)
+        self.addComponents()
 
-    def addComponents(self, titleBarHeight):
-        self.sliderR = Slider(15, titleBarHeight +
-                              30, self.width - 30, 30, 'SliderR', COLOR_RED)
-        self.sliderG = Slider(15, titleBarHeight +
-                              70, self.width - 30, 30, 'SliderG', COLOR_GREEN)
-        self.sliderB = Slider(15, titleBarHeight +
-                              110, self.width - 30, 30, 'SliderB', COLOR_BLUE)
+    def addComponents(self):
+        self.sliderR = Slider(0, 0, self.width, 60, 'SliderR', COLOR_RED)
+        self.sliderG = Slider(0, 0, self.width, 30, 'SliderG', COLOR_GREEN)
+        self.sliderB = Slider(0, 0, self.width, 30, 'SliderB', COLOR_BLUE)
         self.color = self.mapFromRgbToHex()
-        self.label = Label(80, titleBarHeight + 220, self.width -
-                           30, 30, 'color', self.color, COLOR_CLEAR)
+        self.colorLabel = Label(0, 0, self.width -
+                           30, 30, 'ColorLabel', '', self.color)
+        self.colorText = Label(0, 0, self.width -
+                           30, 5, 'ColorText', self.color, COLOR_CLEAR)
 
-        self.addChildWindow(self.sliderR)
-        self.addChildWindow(self.sliderG)
-        self.addChildWindow(self.sliderB)
-        self.addChildWindow(self.label)
+        self.addChildWindow(self.container)
+        self.container.addChildWindow(self.sliderR)
+        self.container.addChildWindow(self.sliderG)
+        self.container.addChildWindow(self.sliderB)
+        self.container.addChildWindow(self.colorLabel)
+        self.container.addChildWindow(self.colorText)
 
     def mapFromRgbToHex(self):
         return '#{:02x}{:02x}{:02x}'.format(int(self.sliderR.value*255), int(self.sliderG.value*255), int(self.sliderB.value*255))
 
     def draw(self, ctx):
-        # container = Container(self.x, self.y + self.windowTitleBarHeight, self.width, self.height-self.windowTitleBarHeight, 'ColorsContainer', 'vertical', 15)
         super().draw(ctx)
         self.sliderR.draw(ctx)
         self.sliderG.draw(ctx)
         self.sliderB.draw(ctx)
         self.color = self.mapFromRgbToHex()
-
-        ctx.setFillColor(self.color)
-        ctx.fillRect(30, 50, self.width - 60, 100)
-
-        self.label.text = self.color
-        self.label.draw(ctx)
+        self.colorLabel.normalColor = self.color
+        self.colorText.text = self.color
+        self.colorLabel.draw(ctx)
+        self.colorText.draw(ctx)

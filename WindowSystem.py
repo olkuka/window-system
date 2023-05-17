@@ -23,8 +23,7 @@ class WindowSystem(GraphicsEventSystem):
         s2 = self.createWindowOnScreen(10, 10, 400, 400, "First App")
         s2.backgroundColor = COLOR_GREEN
 
-        colorsApp = Colors(500, 100, 200, 300,
-                           self.windowManager.titleBarHeight)
+        colorsApp = Colors(500, 100, 200, 250, self.windowManager.titleBarHeight)
         self.screen.addChildWindow(colorsApp)
 
         # s4_2 = Window(290, 290, 100, 100, "SCREEN_3-2")

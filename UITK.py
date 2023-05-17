@@ -63,6 +63,7 @@ class Container(Widget):
             totalSpacing = self.spacing * (num_children - 1)
 
             if self.height < totalSpacing:
+                print('no')
                 return  # Not enough space to distribute equally
 
             child_width = self.width
