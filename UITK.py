@@ -23,9 +23,9 @@ class Container(Widget):
         super().__init__(originX, originY, width, height, identifier)
         self.axis = axis
         self.spacing = spacing
-        
 
     # resize the container
+
     def resize(self, x, y, width, height):
         super().resize(x, y, width, height)
         self.layoutChildren()
