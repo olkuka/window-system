@@ -25,37 +25,71 @@ class Container(Widget):
         self.spacing = spacing
         
 
+    def addChildWindow(self, window):
+        super().addChildWindow(window) 
+        self.resize(self.x,self.y,self.width,self.height)
+        
+    
+    def removeFromParentWindow(self):
+        super().removeFromParentWindow()
+        self.resize(self.x,self.y,self.width,self.height)
+
     # resize the container
     def resize(self, x, y, width, height):
         super().resize(x, y, width, height)
         self.layoutChildren()
 
     def layoutChildren(self):
+        num_children = len(self.childWindows)
+        
+        if num_children == 0:
+                return
+        
         if self.axis == 'horizontal':
-            # calculate the total width of the container taking its children and spacing into account
-            totalWidth = sum([child.width for child in self.childWindows]
-                             ) + self.spacing * (len(self.childWindows) - 1)
-            # set a new x coordinate
-            x = self.x + (self.width - totalWidth) // 2
-            y = self.y
+            
+            if self.width < self.spacing * (num_children - 1):
+                return  # Not enough space to distribute equally
 
-            # resize each children recursively and take care of the spacing
-            for child in self.childWindows:
-                child.resize(x, y, child.width, child.height)
-                x += child.width + self.spacing
+            child_width = (self.width - self.spacing * (num_children - 1)) // num_children
+            child_height = self.height
+
+            for i, child in enumerate(self.childWindows):
+                child_x = self.x + i * (child_width + self.spacing)
+                child_y = self.y
+                child.resize(child_x, child_y, child_width, child_height)
 
         elif self.axis == 'vertical':
-            # calculate the total height of the container taking its children and spacing into account
-            totalHeight = sum([child.height for child in self.childWindows]
-                              ) + self.spacing * (len(self.childWindows) - 1)
-            x = self.x
-            # set a new y coordinate
-            y = self.y + (self.height - totalHeight) // 2
-            # resize each children recursively and take care of the spacing
-            for child in self.children:
-                child.resize(x, y, child.width, child.height)
-                y += child.height + self.spacing
+            
+            totalSpacing = self.spacing * (num_children - 1)
 
+            if self.height < totalSpacing:
+                return  # Not enough space to distribute equally
+
+            child_width = self.width
+            child_height = (self.height - totalSpacing) // num_children
+            
+
+            for i, child in enumerate(self.childWindows):
+                child_x = self.x
+                child_y = self.y+i * (child_height + self.spacing)
+                child.resize(child_x, child_y, child_width, child_height)
+                
+
+        elif self.axis == 'grid':
+
+            if self.width < self.spacing * (num_children - 1):
+                return  # Not enough space to distribute equally
+            
+            if self.height < self.spacing * (num_children - 1):
+                return  # Not enough space to distribute equally
+
+            child_width = (self.width - self.spacing * (num_children - 1)) // num_children
+            child_height = (self.height - self.spacing * (num_children - 1)) // num_children
+
+            for i, child in enumerate(self.childWindows):
+                child_x = self.x + i * (child_width + self.spacing)
+                child_y = self.y + i * (child_height + self.spacing)
+                child.resize(child_x, child_y, child_width, child_height)
 
 class Label(Widget):
     def __init__(self, originX, originY, width, height, identifier, text, backgroundColor):
@@ -70,7 +104,7 @@ class Label(Widget):
         super().draw(ctx)
         ctx.setFont(None)
         ctx.setStrokeColor(self.textColor)
-        ctx.drawString(self.text, 0, 0)
+        ctx.drawString(self.text, (self.width-len(self.text)*7)/2 , (self.height-14)/2)
 
 
 class Button(Label):

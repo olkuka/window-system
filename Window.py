@@ -12,8 +12,8 @@ from collections import namedtuple
 
 AllAnchors = namedtuple('AllAnchors', "top right bottom left")
 LayoutAnchor = AllAnchors(1 << 0, 1 << 1, 1 << 2, 1 << 3)
-MIN_WINDOW_WIDTH = 100
-MIN_WINDOW_HEIGHT = 100
+MIN_WINDOW_WIDTH = 50
+MIN_WINDOW_HEIGHT = 50
 
 
 class Window:
@@ -50,29 +50,29 @@ class Window:
         self.width = width
         self.height = height
 
-        for child in self.childWindows:
-            # if child.layoutAnchors & LayoutAnchor.top and child.layoutAnchors & LayoutAnchor.right:
-            #     child.x = self.x + self.width - child.width - rightMargin
+        # for child in self.childWindows:
+        #     # if child.layoutAnchors & LayoutAnchor.top and child.layoutAnchors & LayoutAnchor.right:
+        #     #     child.x = self.x + self.width - child.width - rightMargin
 
-            if child.layoutAnchors & LayoutAnchor.right:
-                child.x = self.x + self.width - child.width - rightMargin
+        #     if child.layoutAnchors & LayoutAnchor.right:
+        #         child.x = self.x + self.width - child.width - rightMargin
 
-            if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.right:
-                child.x = self.x + self.width - child.width - rightMargin
-                child.y = self.y + self.height - child.height - bottomMargin
+        #     if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.right:
+        #         child.x = self.x + self.width - child.width - rightMargin
+        #         child.y = self.y + self.height - child.height - bottomMargin
 
-            if child.layoutAnchors & LayoutAnchor.bottom:
-                child.y = self.y + self.height - child.height - bottomMargin
+        #     if child.layoutAnchors & LayoutAnchor.bottom:
+        #         child.y = self.y + self.height - child.height - bottomMargin
 
-            if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.left:
-                child.y = self.y + self.height - child.height - bottomMargin
+        #     if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.left:
+        #         child.y = self.y + self.height - child.height - bottomMargin
 
-            if child.layoutAnchors & LayoutAnchor.left and child.layoutAnchors & LayoutAnchor.right:
-                # child.y = self.y + self.height - child.height - bottomMargin
-                child.width = max(width - child.x - rightMargin, MIN_WINDOW_WIDTH)
+        #     if child.layoutAnchors & LayoutAnchor.left and child.layoutAnchors & LayoutAnchor.right:
+        #         # child.y = self.y + self.height - child.height - bottomMargin
+        #         child.width = max(width - child.x - rightMargin, MIN_WINDOW_WIDTH)
 
-            if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.top:
-                child.y = self.height - child.height - bottomMargin
+        #     if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.top:
+        #         child.y = self.height - child.height - bottomMargin
 
 
 
