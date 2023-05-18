@@ -29,8 +29,14 @@ class WindowManager:
         if y >= self.windowSystem.screen.height - self.taskBarHeight:
             # if yes - check which window's icon was clicked
             for child in self.windowSystem.screen.childWindows:
-                if child.taskbarIconX <= x <= child.taskbarIconX + 40:
+                if child.identifier != 'StartMenu' and child.taskbarIconX <= x <= child.taskbarIconX + 40:
                     return child
+        return None
+    
+    def hitStartMenu(self, x, y):
+        # check if the click is within the taskbar and if it's a start menu
+        if y >= self.windowSystem.screen.height - self.taskBarHeight and 0 <= x <= 40:
+            return True
         return None
 
     def decorateWindow(self, window, ctx):
@@ -47,6 +53,7 @@ class WindowManager:
 
             ctx.setFillColor(titleBarColor)
             ctx.fillRect(0, 0, window.width, self.titleBarHeight)
+
             ctx.drawString(window.identifier, 4, 2)
 
             # add a stroked border
@@ -95,8 +102,8 @@ class WindowManager:
         ctx.setFillColor(COLOR_LIGHT_GRAY)
         ctx.fillRect(0, self.windowSystem.height - 40,
                      self.windowSystem.width, self.windowSystem.height)
-
-        # draw a menu icon
+        
+         # draw a start menu icon
         ctx.setFillColor(COLOR_GRAY)
         ctx.fillRect(0, self.windowSystem.height -
                      40, 40, self.windowSystem.height)
@@ -107,18 +114,20 @@ class WindowManager:
         sortedChildren = sorted(
             self.windowSystem.screen.childWindows, key=lambda child: child.identifier)
 
+        ctx.setFont(Font(family="Helvetica", size=14, weight="normal"))
         # for every child draw its icon
         for child in sortedChildren:
-            # if the window is a top-level window, set its color to blue
-            if child == self.windowSystem.screen.childWindows[-1]:
-                ctx.setFillColor(COLOR_BLUE)
-            # if not - set the color to light blue
-            else:
-                ctx.setFillColor(COLOR_LIGHT_BLUE)
+            if child.identifier != 'StartMenu':
+                # if the window is a top-level window, set its color to blue
+                if child == self.windowSystem.screen.childWindows[-1]:
+                    ctx.setFillColor(COLOR_BLUE)
+                # if not - set the color to light blue
+                else:
+                    ctx.setFillColor(COLOR_LIGHT_BLUE)
 
-            child.taskbarIconX = currX
-            ctx.fillRect(currX, self.windowSystem.height - 40,
-                         currX + 40, self.windowSystem.height)
-            ctx.drawString(
-                child.identifier[0], currX + 13, self.windowSystem.height - 32)
-            currX = currX + 42
+                child.taskbarIconX = currX
+                ctx.fillRect(currX, self.windowSystem.height - 40,
+                            currX + 40, self.windowSystem.height)
+                ctx.drawString(
+                    child.identifier[0], currX + 13, self.windowSystem.height - 32)
+                currX = currX + 42

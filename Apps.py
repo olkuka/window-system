@@ -7,10 +7,9 @@ from UITK import *
 
 
 class HelloWorld(Widget):
-    def __init__(self, originX, originY, width, height, identifier):
-        super().__init__(originX, originY, width, height, identifier)
+    def __init__(self, originX, originY, width, height):
+        super().__init__(originX, originY, width, height, 'Hello World')
         self.backgroundColor = COLOR_WHITE
-
         self.container = Container(
             25, 0, width-100, height-50, "HelloWorldContainer", 'vertical', 10)
         self.greetingText = Label(
@@ -40,8 +39,8 @@ class HelloWorld(Widget):
 
 
 class Calculator(Widget):
-    def __init__(self, originX, originY, width, height, identifier):
-        super().__init__(originX, originY, width, height, identifier)
+    def __init__(self, originX, originY, width, height):
+        super().__init__(originX, originY, width, height, 'Calculator')
         self.backgroundColor = COLOR_WHITE
 
         self.container = Container(
@@ -69,7 +68,7 @@ class Calculator(Widget):
 
 
 class Colors(Widget):
-    def __init__(self, originX, originY, width, height, titleBarHeight):
+    def __init__(self, originX, originY, width, height):
         super().__init__(originX, originY, width, height, 'Colors')
         self.backgroundColor = COLOR_LIGHT_GREEN
         self.container = Container(
@@ -98,11 +97,41 @@ class Colors(Widget):
 
     def draw(self, ctx):
         super().draw(ctx)
-        self.sliderR.draw(ctx)
-        self.sliderG.draw(ctx)
-        self.sliderB.draw(ctx)
         self.color = self.mapFromRgbToHex()
         self.colorLabel.backgroundColor = self.color
         self.colorText.text = self.color
-        self.colorLabel.draw(ctx)
-        self.colorText.draw(ctx)
+        self.container.draw(ctx)
+
+
+class StartMenu(Window):
+    def __init__(self, screen, originX=0, originY=400, width=150, height=150):
+        super().__init__(originX, originY, width, height, 'StartMenu')
+        self.backgroundColor = COLOR_LIGHT_GRAY
+        self.addDecorations = False # set decorations to false because we don't want a title bar
+
+        # add buttons for every app
+        self.buttonHelloWorld = Button(0, 45, width, 25, "HelloWorldButton", "HelloWorld",
+                                       COLOR_GRAY, lambda: self.onAppButtonClick(HelloWorld, screen))
+        self.buttonColors = Button(0, 15, width, 25, "ColorsButton", "Colors",
+                                   COLOR_GRAY, lambda: self.onAppButtonClick(Colors, screen))
+        self.buttonCalculator = Button(0, 75, width, 25, "CalculatorButton", "Calculator",
+                                       COLOR_GRAY, lambda: self.onAppButtonClick(Calculator, screen))
+        
+        # add quit button to exit the app
+        self.buttonExit = Button(0, 105, width, 25, "ExitButton", "Quit",
+                                 COLOR_RED, lambda: quit())
+
+        self.addChildWindow(self.buttonHelloWorld)
+        self.addChildWindow(self.buttonColors)
+        self.addChildWindow(self.buttonCalculator)
+        self.addChildWindow(self.buttonExit)
+
+    # action after clicking a button with app
+    def onAppButtonClick(self, appName, screen):
+        # add app to the screen's children 
+        screen.addChildWindow(appName(10, 10, 200, 300))
+        # close the start menu = remove it from parent window
+        self.removeFromParentWindow()
+
+    def draw(self, ctx):
+        super().draw(ctx)

@@ -20,60 +20,60 @@ class WindowSystem(GraphicsEventSystem):
         self.windowManager = WindowManager(self)
 
         # add some windows to test
-        s2 = self.createWindowOnScreen(10, 10, 400, 400, "First App")
-        s2.backgroundColor = COLOR_GREEN
+        # s2 = self.createWindowOnScreen(10, 10, 400, 400, "First App")
+        # s2.backgroundColor = COLOR_GREEN
 
-        colorsApp = Colors(500, 100, 200, 300,
-                           self.windowManager.titleBarHeight)
-        self.screen.addChildWindow(colorsApp)
+        # colorsApp = Colors(500, 100, 200, 300,
+        #                    self.windowManager.titleBarHeight)
+        # self.screen.addChildWindow(colorsApp)
 
-        left = Window(10, 150, 100, 100, "SCREEN_3-2")
-        s2.addChildWindow(left)
-        left.backgroundColor = COLOR_BLACK
-        left.layoutAnchors = LayoutAnchor.left 
+        # left = Window(10, 150, 100, 100, "SCREEN_3-2")
+        # s2.addChildWindow(left)
+        # left.backgroundColor = COLOR_BLACK
+        # left.layoutAnchors = LayoutAnchor.left 
 
-        top = Window(150, 10, 100, 100, "SCREEN_3-2")
-        s2.addChildWindow(top)
-        top.backgroundColor = COLOR_WHITE
-        top.layoutAnchors = LayoutAnchor.top 
+        # top = Window(150, 10, 100, 100, "SCREEN_3-2")
+        # s2.addChildWindow(top)
+        # top.backgroundColor = COLOR_WHITE
+        # top.layoutAnchors = LayoutAnchor.top 
 
-        right = Window(290, 150, 100, 100, "SCREEN_3-2")
-        s2.addChildWindow(right)
-        right.backgroundColor = COLOR_PURPLE
-        right.layoutAnchors = LayoutAnchor.right
+        # right = Window(290, 150, 100, 100, "SCREEN_3-2")
+        # s2.addChildWindow(right)
+        # right.backgroundColor = COLOR_PURPLE
+        # right.layoutAnchors = LayoutAnchor.right
 
-        bottom = Window(150, 290, 100, 100, "SCREEN_3-2")
-        s2.addChildWindow(bottom)
-        bottom.backgroundColor = COLOR_BROWN
-        bottom.layoutAnchors = LayoutAnchor.bottom
+        # bottom = Window(150, 290, 100, 100, "SCREEN_3-2")
+        # s2.addChildWindow(bottom)
+        # bottom.backgroundColor = COLOR_BROWN
+        # bottom.layoutAnchors = LayoutAnchor.bottom
 
-        topLeft = Window(10, 10, 100, 100, "SCREEN_3-2")
-        s2.addChildWindow(topLeft)
-        topLeft.backgroundColor = COLOR_PINK
-        topLeft.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left
+        # topLeft = Window(10, 10, 100, 100, "SCREEN_3-2")
+        # s2.addChildWindow(topLeft)
+        # topLeft.backgroundColor = COLOR_PINK
+        # topLeft.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left
 
-        topRight = Window(290, 10, 100, 100, "SCREEN_3-2")
-        s2.addChildWindow(topRight)
-        topRight.backgroundColor = COLOR_YELLOW
-        topRight.layoutAnchors = LayoutAnchor.top | LayoutAnchor.right
+        # topRight = Window(290, 10, 100, 100, "SCREEN_3-2")
+        # s2.addChildWindow(topRight)
+        # topRight.backgroundColor = COLOR_YELLOW
+        # topRight.layoutAnchors = LayoutAnchor.top | LayoutAnchor.right
 
-        bottomLeft = Window(10, 290, 100, 100, "SCREEN_3-2")
-        s2.addChildWindow(bottomLeft)
-        bottomLeft.backgroundColor = COLOR_RED
-        bottomLeft.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.left
+        # bottomLeft = Window(10, 290, 100, 100, "SCREEN_3-2")
+        # s2.addChildWindow(bottomLeft)
+        # bottomLeft.backgroundColor = COLOR_RED
+        # bottomLeft.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.left
 
-        bottomRight = Window(290, 290, 100, 100, "SCREEN_3-2")
-        s2.addChildWindow(bottomRight)
-        bottomRight.backgroundColor = COLOR_GRAY
-        bottomRight.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right
+        # bottomRight = Window(290, 290, 100, 100, "SCREEN_3-2")
+        # s2.addChildWindow(bottomRight)
+        # bottomRight.backgroundColor = COLOR_GRAY
+        # bottomRight.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right
 
-        topLeftBottomRight = Window(150, 150, 100, 100, "SCREEN_3-2")
-        s2.addChildWindow(topLeftBottomRight)
-        topLeftBottomRight.backgroundColor = COLOR_BLUE
-        topLeftBottomRight.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right | LayoutAnchor.top | LayoutAnchor.left
+        # topLeftBottomRight = Window(150, 150, 100, 100, "SCREEN_3-2")
+        # s2.addChildWindow(topLeftBottomRight)
+        # topLeftBottomRight.backgroundColor = COLOR_BLUE
+        # topLeftBottomRight.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right | LayoutAnchor.top | LayoutAnchor.left
 
-        helloWorld = HelloWorld(100, 100, 400, 400, "1")
-        self.screen.addChildWindow(helloWorld)
+        # helloWorld = HelloWorld(100, 100, 400, 400, "1")
+        # self.screen.addChildWindow(helloWorld)
 
     """
     WINDOW MANAGEMENT
@@ -141,13 +141,13 @@ class WindowSystem(GraphicsEventSystem):
             decorationClicked, isResizable = self.screen.windowDecorationAtLocation(
                 x, y)
             windowTaskbarIconClicked = self.windowManager.hitTaskbarIcon(x, y)
+            startMenuClicked = self.windowManager.hitStartMenu(x, y)
 
             # if there is a Window Decoration, Window Manager handles the event
             if decorationClicked and isResizable == False:
                 localX, localY = decorationClicked.convertPositionFromScreen(
                     x, y)
-                self.windowManager.handleMouseClicked(
-                    decorationClicked, localX, localY)
+                self.windowManager.handleMouseClicked(decorationClicked, localX, localY)
                 self.requestRepaint()
 
             # if a window taskbar icon is clicked, Window Manager handles the event
@@ -157,6 +157,10 @@ class WindowSystem(GraphicsEventSystem):
                 self.windowManager.handleMouseClicked(
                     windowTaskbarIconClicked, 0, 0)
                 self.requestRepaint()
+
+            elif startMenuClicked:
+                self.screen.addChildWindow(StartMenu(self.screen))
+
             else:
                 # check the window at the given location
                 windowClicked = self.screen.childWindowAtLocation(x, y)
@@ -235,7 +239,6 @@ class WindowSystem(GraphicsEventSystem):
 
     def handleKeyPressed(self, char):
         pass
-
 
 # Let's start your window system!
 w = WindowSystem(800, 600)
