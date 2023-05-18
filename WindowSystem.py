@@ -23,7 +23,8 @@ class WindowSystem(GraphicsEventSystem):
         s2 = self.createWindowOnScreen(10, 10, 400, 400, "First App")
         s2.backgroundColor = COLOR_GREEN
 
-        colorsApp = Colors(500, 100, 200, 250, self.windowManager.titleBarHeight)
+        colorsApp = Colors(500, 100, 200, 300,
+                           self.windowManager.titleBarHeight)
         self.screen.addChildWindow(colorsApp)
 
         # s4_2 = Window(290, 290, 100, 100, "SCREEN_3-2")
@@ -31,7 +32,6 @@ class WindowSystem(GraphicsEventSystem):
         # s4_2.backgroundColor = COLOR_BLACK
         # s4_2.layoutAnchors = LayoutAnchor.left | LayoutAnchor.top
 
-      
         # s4_3 = Window(380, 380, 10, 10, "SCREEN_3-3")
         # s4.addChildWindow(s4_3)
         # s4_3.backgroundColor = COLOR_BLACK
@@ -47,11 +47,9 @@ class WindowSystem(GraphicsEventSystem):
         # s4_5.backgroundColor = COLOR_BLACK
         # s4_5.layoutAnchors = LayoutAnchor.left
 
-        helloWorld = HelloWorld(100,100,400,400,"1")
+        helloWorld = HelloWorld(100, 100, 400, 400, "1")
         self.screen.addChildWindow(helloWorld)
-        
 
-        
     """
     WINDOW MANAGEMENT
     """
@@ -128,7 +126,6 @@ class WindowSystem(GraphicsEventSystem):
                 self.requestRepaint()
 
             # if a window taskbar icon is clicked, Window Manager handles the event
-            # if a window taskbar icon is clicked, Window Manager handles the event
             elif windowTaskbarIconClicked:
                 # set isHidden property to False and call handleMouseClicked to bring the window to the front
                 windowTaskbarIconClicked.isHidden = False
@@ -161,7 +158,6 @@ class WindowSystem(GraphicsEventSystem):
             self.requestRepaint()
         # else :
         #     self.setAllBtnNormal(self.screen)
-        
 
     def setAllBtnNormal(self, window):
         for child in window.childWindows:
