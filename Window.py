@@ -30,6 +30,7 @@ class Window:
 
         self.isHidden = False
         self.taskbarIconX = None
+        self.addDecorations = True
 
         self.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left
 
@@ -210,7 +211,8 @@ class Screen(Window):
         for child in self.childWindows:
             if not child.isHidden:
                 child.draw(ctx)
-                self.windowSystem.windowManager.decorateWindow(child, ctx)
+                if child.addDecorations: 
+                    self.windowSystem.windowManager.decorateWindow(child, ctx)
 
     def windowDecorationAtLocation(self, x, y):
         for child in reversed(self.childWindows):
