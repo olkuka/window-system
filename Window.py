@@ -42,12 +42,11 @@ class Window:
         dw = width - self.width
         dh = height - self.height
 
-         # set new coordinates, width and height
+        # set new coordinates, width and height
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-
 
         for child in self.childWindows:
             # left anchor
@@ -63,9 +62,9 @@ class Window:
                 if not child.layoutAnchors & LayoutAnchor.top and not child.layoutAnchors & LayoutAnchor.bottom:
                     # change child y coordinate to be exactly at the half of the vertical axis
                     child.y = self.height // 2 - child.height//2
-                # change child x coordinate to move along with the right window margin 
+                # change child x coordinate to move along with the right window margin
                 child.x += dw
-            
+
             # top anchor (but not top-left or top-right)
             if child.layoutAnchors & LayoutAnchor.top and not child.layoutAnchors & LayoutAnchor.right and not child.layoutAnchors & LayoutAnchor.left:
                 # change child x coordinate to be exactly at the half of the horizontal axis
@@ -76,12 +75,12 @@ class Window:
                 # if only bottom anchor (not bottom-left or bottom-right)
                 if not child.layoutAnchors & LayoutAnchor.right and not child.layoutAnchors & LayoutAnchor.left:
                     child.x = self.width // 2 - child.width//2
-                # change child y coordinate to move along with the bottom window margin 
-                child.y += dh 
+                # change child y coordinate to move along with the bottom window margin
+                child.y += dh
 
             # right, left, top, bottom anchors - for windows that have every anchor
             if child.layoutAnchors & LayoutAnchor.right and child.layoutAnchors & LayoutAnchor.left and child.layoutAnchors & LayoutAnchor.top and child.layoutAnchors & LayoutAnchor.bottom:
-                # ensure that window is always in the middle by changing coordinates 
+                # ensure that window is always in the middle by changing coordinates
                 child.x = self.width // 2 - child.width//2
                 child.y = self.height // 2 - child.height//2
                 # additionally change the width and the height
