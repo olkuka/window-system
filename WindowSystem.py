@@ -160,6 +160,7 @@ class WindowSystem(GraphicsEventSystem):
 
             elif startMenuClicked:
                 self.screen.addChildWindow(StartMenu(self.screen))
+                self.requestRepaint()
 
             else:
                 # check the window at the given location

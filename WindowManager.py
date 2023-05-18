@@ -85,8 +85,9 @@ class WindowManager:
         elif window.width - 45 <= x <= window.width - 35 and 5 <= y <= 15:
             # set isHidden to True and bring the other window to the front
             window.isHidden = True
-            self.windowSystem.bringWindowToFront(
-                self.windowSystem.screen.childWindows[-2])
+            if len(self.windowSystem.screen.childWindows) > 1:
+                self.windowSystem.bringWindowToFront(
+                    self.windowSystem.screen.childWindows[-2])
 
         # if no button was clicked
         else:
@@ -118,8 +119,8 @@ class WindowManager:
         # for every child draw its icon
         for child in sortedChildren:
             if child.identifier != 'StartMenu':
-                # if the window is a top-level window, set its color to blue
-                if child == self.windowSystem.screen.childWindows[-1]:
+                # if the window is a top-level window and is not currently hidden, set its color to blue
+                if child == self.windowSystem.screen.childWindows[-1] and child.isHidden == False:
                     ctx.setFillColor(COLOR_BLUE)
                 # if not - set the color to light blue
                 else:
