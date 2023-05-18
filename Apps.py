@@ -14,21 +14,29 @@ class HelloWorld(Widget):
             25, 0, width-100, height-50, "HelloWorldContainer", 'vertical', 10)
         self.greetingText = Label(
             0, 0, 10, 10, "text", "Select a language!", COLOR_CLEAR)
+        # self.greetingText.layoutAnchors = LayoutAnchor.top 
+
         self.germanBtn = Button(0, 0, 200, 51, "Btn1", "Deutsch",
                                 COLOR_GRAY, lambda: self.clickLanguageBtn("Guten Tag"))
+        # self.germanBtn.layoutAnchors = LayoutAnchor.top 
+
         self.englishBtn = Button(0, 0, 200, 51, "Btn2", "English",
                                  COLOR_GRAY, lambda: self.clickLanguageBtn("Good morning"))
-        self.franchBtn = Button(0, 0, 200, 51, "Btn3", "Français",
+        # self.englishBtn.layoutAnchors = LayoutAnchor.top 
+
+        self.frenchBtn = Button(0, 0, 200, 51, "Btn3", "Français",
                                 COLOR_GRAY, lambda: self.clickLanguageBtn("Bonjour"))
+        # self.frenchBtn.layoutAnchors = LayoutAnchor.top 
 
         self.quitBtn = Button(self.width-50, self.height-30, 40, 20, "quitBtn",
                               "Quit", COLOR_GRAY, lambda: self.removeFromParentWindow())
+        # self.frenchBtn.layoutAnchors = LayoutAnchor.bottom |  LayoutAnchor.right
 
         self.addChildWindow(self.container)
         self.container.addChildWindow(self.greetingText)
         self.container.addChildWindow(self.germanBtn)
         self.container.addChildWindow(self.englishBtn)
-        self.container.addChildWindow(self.franchBtn)
+        self.container.addChildWindow(self.frenchBtn)
         self.addChildWindow(self.quitBtn)
 
     def clickLanguageBtn(self, text):
@@ -77,13 +85,22 @@ class Colors(Widget):
 
     def addComponents(self):
         self.sliderR = Slider(0, 0, self.width-20, 75, 'SliderR', COLOR_RED)
+        self.sliderR.layoutAnchors = LayoutAnchor.top 
+
         self.sliderG = Slider(0, 0, self.width-20, 75, 'SliderG', COLOR_GREEN)
+        self.sliderG.layoutAnchors = LayoutAnchor.top 
+
         self.sliderB = Slider(0, 0, self.width-20, 75, 'SliderB', COLOR_BLUE)
+        self.sliderB.layoutAnchors = LayoutAnchor.top 
+
         self.color = self.mapFromRgbToHex()
         self.colorLabel = Label(0, 0, self.width -
                                 30, 30, 'ColorLabel', '', self.color)
+        self.colorLabel.layoutAnchors = LayoutAnchor.bottom
+
         self.colorText = Label(0, 0, self.width -
                                30, 5, 'ColorText', self.color, COLOR_CLEAR)
+        self.colorText.layoutAnchors = LayoutAnchor.bottom
 
         self.addChildWindow(self.container)
         self.container.addChildWindow(self.sliderR)
