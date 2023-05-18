@@ -88,6 +88,8 @@ class Window:
                 child.width += dw
                 child.height += dh
 
+            child.resize(child.x, child.y, self.width, child.height)
+
     def addChildWindow(self, window):
         # add window to the end of childWindows list
         self.childWindows.append(window)
@@ -211,7 +213,7 @@ class Screen(Window):
         for child in self.childWindows:
             if not child.isHidden:
                 child.draw(ctx)
-                if child.addDecorations: 
+                if child.addDecorations:
                     self.windowSystem.windowManager.decorateWindow(child, ctx)
 
     def windowDecorationAtLocation(self, x, y):

@@ -26,68 +26,76 @@ class Container(Widget):
 
     def addChildWindow(self, window):
         super().addChildWindow(window)
-        self.resize(self.x, self.y, self.width, self.height)
+        self.layoutChildren()
 
     def removeFromParentWindow(self):
         super().removeFromParentWindow()
-        self.resize(self.x, self.y, self.width, self.height)
-
-    # resize the container
-    def resize(self, x, y, width, height):
-        super().resize(x, y, width, height)
         self.layoutChildren()
 
     def layoutChildren(self):
         numChildren = len(self.childWindows)
-
         if numChildren == 0:
             return
 
         if self.axis == 'horizontal':
-
             if self.width < self.spacing * (numChildren - 1):
                 return  # Not enough space to distribute equally
-
-            child_width = (self.width - self.spacing *
-                           (numChildren - 1)) // numChildren
-            child_height = self.height
-
             for i, child in enumerate(self.childWindows):
-                child_x = self.x + i * (child_width + self.spacing)
-                child_y = self.y
-                child.resize(child_x, child_y, child_width, child_height)
+                child.width = (self.width - self.spacing *
+                               (numChildren - 1)) // numChildren
+                child.height = self.height
+                child.x = self.x + i * (child.width + self.spacing)
+                child.y = self.y
 
         elif self.axis == 'vertical':
             # spaces between children, on the top and on the bottom
             totalSpacing = self.spacing * (numChildren + 1)
-
             if self.height < totalSpacing:
                 return  # Not enough space to distribute equally
-
-            child_width = self.width
-            child_height = (self.height - totalSpacing) // numChildren
-
             for i, child in enumerate(self.childWindows):
-                child_x = self.x
-                child_y = self.y + i * (child_height + self.spacing)
-                child.resize(child_x, child_y, child_width, child_height)
+                child.width = self.width
+                child.height = (self.height - totalSpacing) // numChildren
+                child.x = self.x
+                child.y = self.y + i * (child.height + self.spacing)
 
-        elif self.axis == 'grid':
-            if self.width < self.spacing * (numChildren - 1):
-                return  # Not enough space to distribute equally
+    def resize(self, x, y, width, height):
+        numChildren = len(self.childWindows)
+        if numChildren == 0:
+            return
 
-            if self.height < self.spacing * (numChildren - 1):
-                return  # Not enough space to distribute equally
+        # apply minimum size constraints
+        width = max(width, MIN_WINDOW_WIDTH)
+        height = max(height, MIN_WINDOW_HEIGHT)
 
-            child_width = (self.width - self.spacing *
-                           (numChildren - 1)) // numChildren
-            child_height = (self.height - self.spacing *
-                            (numChildren - 1)) // numChildren
+        # calculate the differences between current width/height and previous width/height
+        dw = width - self.width
+        dh = height - self.height
 
-            for i, child in enumerate(self.childWindows):
-                child_x = self.x + i * (child_width + self.spacing)
-                child_y = self.y + i * (child_height + self.spacing)
-                child.resize(child_x, child_y, child_width, child_height)
+        if self.axis == 'horizontal':
+            self.spacing += dw
+            self.height = height
+            # check if there's enough space to distribute equally
+            if width >= self.spacing * (numChildren + 1):
+                self.width = width
+                for i, child in enumerate(self.childWindows):
+                    child.width = (self.width - self.spacing *
+                                   (numChildren - 1)) // numChildren
+                    child.height = self.height
+                    child.x = self.x + i * (child.width + self.spacing)
+                    child.y = self.y
+
+        elif self.axis == 'vertical':
+            self.spacing += dh
+            self.width = width
+            totalSpacing = self.spacing * (numChildren + 1)
+            if height >= totalSpacing:
+                self.height = height
+                for i, child in enumerate(self.childWindows):
+                    child.width = width + dw
+                    child.height = (self.height - totalSpacing) // numChildren
+                    child.x = self.x
+                    child.y = self.spacing + self.y + \
+                        i * (child.height + self.spacing)
 
 
 class Label(Widget):
@@ -150,24 +158,28 @@ class Slider(Widget):
         super().__init__(originX, originY, width, height, identifier)
         self.backgroundColor = backgroundColor
 
-        # handle properties
+        self.isHandlePressed = False  # if the slider is currently pressed
         self.handleX = min(6, self.width)  # handle X coordinate
         self.handleY = min(6, self.height)  # handle Y coordinate
         self.handleWidth = self.width//6
         self.handleHeight = self.height//2
-        self.isHandlePressed = False  # if the slider is currently pressed
 
-        # inner rectangle coordinates
+        # inner rectangle
         self.innerX1 = 5
-        self.innerX2 = max(self.innerX1, self.width - self.innerX1)
         self.innerY1 = 5
-        self.innerY2 = max(self.innerY1, self.innerY1 + self.handleHeight)
 
         self.value = 0  # sliders value
 
     def draw(self, ctx):
         # draw the background
         super().draw(ctx)
+
+        # these properties that have to be set here because they depend on width/height and
+        # they have to change their values every time user resizes the window
+        self.handleWidth = self.width//6
+        self.handleHeight = self.height//2
+        self.innerX2 = max(self.innerX1, self.width - self.innerX1)
+        self.innerY2 = max(self.innerY1, self.innerY1 + self.handleHeight)
 
         # draw the inner rectangle and its borders
         ctx.setFillColor('#CECECE')
