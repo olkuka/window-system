@@ -6,6 +6,7 @@ Window System - Submission
 by  
 """
 
+from Apps import *
 from GraphicsEventSystem import *
 from Window import *
 from WindowManager import *
@@ -22,53 +23,58 @@ class WindowSystem(GraphicsEventSystem):
         s2 = self.createWindowOnScreen(10, 10, 400, 400, "First App")
         s2.backgroundColor = COLOR_GREEN
 
-        # s3 = self.createWindowOnScreen(50, 50, 500, 200, "Second App")
-        # s3.backgroundColor = COLOR_YELLOW
+        colorsApp = Colors(500, 100, 200, 300,
+                           self.windowManager.titleBarHeight)
+        self.screen.addChildWindow(colorsApp)
 
-        # s4 = self.createWindowOnScreen(300, 200, 400, 400, "My Third App")
-        # s4.backgroundColor = COLOR_PINK
+        left = Window(10, 150, 100, 100, "SCREEN_3-2")
+        s2.addChildWindow(left)
+        left.backgroundColor = COLOR_BLACK
+        left.layoutAnchors = LayoutAnchor.left 
 
-        # # s4_1 = Window(10, 30, 200, 100, "SCREEN_3-1")
-        # # s4.addChildWindow(s4_1)
-        # # s4_1.backgroundColor = COLOR_BLACK
+        top = Window(150, 10, 100, 100, "SCREEN_3-2")
+        s2.addChildWindow(top)
+        top.backgroundColor = COLOR_WHITE
+        top.layoutAnchors = LayoutAnchor.top 
 
-        # Label1 = Label(0, 30, 50, 50, "Label 1", "hi", COLOR_WHITE)
-        # s4.addChildWindow(Label1)
+        right = Window(290, 150, 100, 100, "SCREEN_3-2")
+        s2.addChildWindow(right)
+        right.backgroundColor = COLOR_PURPLE
+        right.layoutAnchors = LayoutAnchor.right
 
-        # btn1 = Button(50, 60, 51, 51, "Btn1", "print",
-        #               COLOR_GRAY, lambda: print("clicked!"))
-        # s4.addChildWindow(btn1)
+        bottom = Window(150, 290, 100, 100, "SCREEN_3-2")
+        s2.addChildWindow(bottom)
+        bottom.backgroundColor = COLOR_BROWN
+        bottom.layoutAnchors = LayoutAnchor.bottom
 
-        # slider = Slider(30, 30, 250, 100, 'Slider 1')
-        # s3.addChildWindow(slider)
+        topLeft = Window(10, 10, 100, 100, "SCREEN_3-2")
+        s2.addChildWindow(topLeft)
+        topLeft.backgroundColor = COLOR_PINK
+        topLeft.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left
 
-        # s4_2 = Window(10, 20, 10, 10, "SCREEN_3-2")
-        # s4.addChildWindow(s4_2)
-        # s4_2.backgroundColor = COLOR_BLACK
-        # s4_2.layoutAnchors = LayoutAnchor.left | LayoutAnchor.top
+        topRight = Window(290, 10, 100, 100, "SCREEN_3-2")
+        s2.addChildWindow(topRight)
+        topRight.backgroundColor = COLOR_YELLOW
+        topRight.layoutAnchors = LayoutAnchor.top | LayoutAnchor.right
 
-      
-        # s4_3 = Window(380, 380, 10, 10, "SCREEN_3-3")
-        # s4.addChildWindow(s4_3)
-        # s4_3.backgroundColor = COLOR_BLACK
-        # s4_3.layoutAnchors = LayoutAnchor.right | LayoutAnchor.bottom
+        bottomLeft = Window(10, 290, 100, 100, "SCREEN_3-2")
+        s2.addChildWindow(bottomLeft)
+        bottomLeft.backgroundColor = COLOR_RED
+        bottomLeft.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.left
 
-        # s4_4 = Window(200, 380, 10, 10, "SCREEN_3-4")
-        # s4.addChildWindow(s4_4)
-        # s4_4.backgroundColor = COLOR_BLACK
-        # s4_4.layoutAnchors = LayoutAnchor.bottom
+        bottomRight = Window(290, 290, 100, 100, "SCREEN_3-2")
+        s2.addChildWindow(bottomRight)
+        bottomRight.backgroundColor = COLOR_GRAY
+        bottomRight.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right
 
-        # s4_5 = Window(10, 200, 10, 10, "SCREEN_3-5")
-        # s4.addChildWindow(s4_5)
-        # s4_5.backgroundColor = COLOR_BLACK
-        # s4_5.layoutAnchors = LayoutAnchor.left
+        topLeftBottomRight = Window(150, 150, 100, 100, "SCREEN_3-2")
+        s2.addChildWindow(topLeftBottomRight)
+        topLeftBottomRight.backgroundColor = COLOR_BLUE
+        topLeftBottomRight.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right | LayoutAnchor.top | LayoutAnchor.left
 
-        helloWorld = HelloWorld(100,100,400,400,"1")
+        helloWorld = HelloWorld(100, 100, 400, 400, "1")
         self.screen.addChildWindow(helloWorld)
-        
 
-
-        
     """
     WINDOW MANAGEMENT
     """
@@ -145,7 +151,6 @@ class WindowSystem(GraphicsEventSystem):
                 self.requestRepaint()
 
             # if a window taskbar icon is clicked, Window Manager handles the event
-            # if a window taskbar icon is clicked, Window Manager handles the event
             elif windowTaskbarIconClicked:
                 # set isHidden property to False and call handleMouseClicked to bring the window to the front
                 windowTaskbarIconClicked.isHidden = False
@@ -161,7 +166,9 @@ class WindowSystem(GraphicsEventSystem):
                     if type(windowClicked) is Button:
                         windowClicked.action()
                         windowClicked.BtnState = BtnState.Hovering
-                        self.requestRepaint()
+                    elif type(windowClicked) is Slider:
+                        windowClicked.isHandlePressed = False
+                    self.requestRepaint()
                     # propagate the click event to the window
                     windowClicked.handleMouseClicked(x, y)
                 else:
@@ -176,7 +183,6 @@ class WindowSystem(GraphicsEventSystem):
             self.requestRepaint()
         # else :
         #     self.setAllBtnNormal(self.screen)
-        
 
     def setAllBtnNormal(self, window):
         for child in window.childWindows:
@@ -201,9 +207,8 @@ class WindowSystem(GraphicsEventSystem):
             newY = windowDecoration.y + deltaY
 
             # calculate new window size based on above distances
-            newWidth = max(windowDecoration.width + deltaX, MIN_WINDOW_WIDTH)
-            newHeight = max(windowDecoration.height +
-                            deltaY, MIN_WINDOW_HEIGHT)
+            newWidth = windowDecoration.width + deltaX
+            newHeight = windowDecoration.height + deltaY
 
             if isResizeble:
                 windowDecoration.resize(
