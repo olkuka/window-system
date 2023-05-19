@@ -39,8 +39,8 @@ class HelloWorld(Widget):
     def clickLanguageBtn(self, text):
         self.greetingText.text = text
 
-    def draw(self, ctx):
-        super().draw(ctx)
+    # def draw(self, ctx):
+    #     super().draw(ctx)
 
 
 class Calculator(Widget):
@@ -129,9 +129,9 @@ class Calculator(Widget):
         
         self.label.text = self.current_input
 
-    def draw(self, ctx):
-        super().draw(ctx)
-        self.container.draw(ctx)
+    # def draw(self, ctx):
+    #     super().draw(ctx)
+        #self.container.draw(ctx)
 
 
 class Colors(Widget):
@@ -144,11 +144,11 @@ class Colors(Widget):
         self.addComponents()
 
     def addComponents(self):
-        self.sliderR = Slider(0, 0, self.width, 75, 'SliderR', COLOR_RED)
+        self.sliderR = Slider(0, 0, self.width, 50, 'SliderR', COLOR_RED)
 
-        self.sliderG = Slider(0, 0, self.width, 75, 'SliderG', COLOR_GREEN)
+        self.sliderG = Slider(0, 0, self.width, 50, 'SliderG', COLOR_GREEN)
 
-        self.sliderB = Slider(0, 0, self.width, 75, 'SliderB', COLOR_BLUE)
+        self.sliderB = Slider(0, 0, self.width, 50, 'SliderB', COLOR_BLUE)
 
         self.color = self.mapFromRgbToHex()
         self.colorLabel = Label(0, 0, self.width, 30,

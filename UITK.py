@@ -85,11 +85,12 @@ class Container(Widget):
             # height = max(height, self.minWindowHeight)
             # width = max(width, self.minWindowWidth)
             for i, child in enumerate(self.childWindows):
+                child.resize(child.x ,child.y,self.width,child.height)
                 child.width = (self.width  - totalSpacing) // numChildren
                 child.height = self.height + dh
                 child.x = self.spacing + i * (child.width + self.spacing)
                 child.y = 0
-                child.resize(child.x ,child.y,child.width,child.height)
+                
 
         elif self.axis == 'vertical':
             # self.minWindowWidth = self.width
@@ -97,11 +98,12 @@ class Container(Widget):
             # height = max(height, self.minWindowHeight)
             # width = max(width, self.minWindowWidth)
             for i, child in enumerate(self.childWindows):
+                child.resize(child.x ,child.y,child.width,child.height)
                 child.width = self.width + dw
                 child.height = (self.height - totalSpacing) // numChildren
                 child.x = 0
                 child.y = self.spacing + i * (child.height + self.spacing)
-                child.resize(child.x ,child.y,child.width,child.height)
+                
         
 
 class Label(Widget):
@@ -175,7 +177,14 @@ class Slider(Widget):
         self.innerY1 = 5
 
         self.value = 0  # sliders value
-
+    
+    def resize(self, x, y, width, height):
+        
+        dw = width - self.width 
+        self.handleX -= dw
+        print(dw)
+        # super().resize(x, y, width, height)
+    
     def draw(self, ctx):
         # draw the background
         super().draw(ctx)

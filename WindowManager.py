@@ -129,6 +129,9 @@ class WindowManager:
                 child.taskbarIconX = currX
                 ctx.fillRect(currX, self.windowSystem.height - 40,
                              currX + 40, self.windowSystem.height)
+            
+            
+                ctx.setStrokeColor(COLOR_WHITE)
                 ctx.drawString(
                     child.identifier[0], currX + 13, self.windowSystem.height - 32)
                 currX = currX + 42

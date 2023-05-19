@@ -124,6 +124,9 @@ class WindowSystem(GraphicsEventSystem):
                     self.screen.handleMouseClicked(x, y)
 
     def handleMouseMoved(self, x, y):
+        self.mousePressX = x
+        self.mousePressY = y
+
         # check the window at the given location
         window = self.screen.childWindowAtLocation(x, y)
         self.setAllBtnNormal(self.screen)
