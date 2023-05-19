@@ -57,11 +57,12 @@ class Calculator(Widget):
             '0', '00','.', '='
         ]
        
-        self.container = Container(0,0,width,height,"Calculator Container",'vertical',0)
+        self.container = Container(0,50,width,height-50,"Calculator Container",'vertical',0)
         self.container.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right
         
-        self.label = Label(0, 10, width,height, "Label", "0", COLOR_CLEAR)
-        self.container.addChildWindow(self.label)
+        self.label = Label(0, 10, width,40, "Label", "0", COLOR_CLEAR)
+        self.label.layoutAnchors = LayoutAnchor.top
+        self.addChildWindow(self.label)
 
         for i in range(5):
             childContainer = Container(0,0,self.width,self.height,"container"+str(i),'horizontal',0)
@@ -69,7 +70,7 @@ class Calculator(Widget):
         
             self.container.addChildWindow(childContainer)
 
-        button_row = 1
+        button_row = 0
         button_column = 0
 
         for btn_text in self.buttons :
@@ -77,7 +78,7 @@ class Calculator(Widget):
             # store callable object with partcial
             button = Button(0, 0, 50, 50, btn_text, btn_text, COLOR_LIGHT_GRAY, partial(self.button_clicked,btn_text))
             
-            if button_row == 1 or button_column == 3:
+            if button_row == 0 or button_column == 3:
                 button.normalColor = '#f7e436'
             
             self.container.childWindows[button_row].addChildWindow(button)
@@ -90,7 +91,6 @@ class Calculator(Widget):
 
         
         self.addChildWindow(self.container)
-        self.addChildWindow(self.label)
         
         
 

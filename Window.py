@@ -71,13 +71,13 @@ class Window:
             # top anchor (but not top-left or top-right)
             if child.layoutAnchors & LayoutAnchor.top and not child.layoutAnchors & LayoutAnchor.right and not child.layoutAnchors & LayoutAnchor.left:
                 # change child x coordinate to move along with a horizontal axis
-                child.x = child.x - dw
+                child.x = self.width/2 - child.width/2
 
             # bottom anchor
             if child.layoutAnchors & LayoutAnchor.bottom:
                 # if only bottom anchor (not bottom-left or bottom-right)
                 if not child.layoutAnchors & LayoutAnchor.right and not child.layoutAnchors & LayoutAnchor.left:
-                    child.x = child.x - dw
+                    child.x = self.width/2 - child.width/2
                 # change child y coordinate to move along with the bottom window margin
                 child.y += dh
 

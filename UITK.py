@@ -40,11 +40,8 @@ class Container(Widget):
             return
 
         if self.axis == 'horizontal':
-            # self.minWindowWidth = sum(child.width for child in self.childWindows)
-            # self.minWindowHeight = self.height
-
-            self.minWindowWidth = MIN_WINDOW_WIDTH*numChildren
-            self.minWindowHeight = MIN_WINDOW_HEIGHT
+            self.minWidth = MIN_WINDOW_WIDTH*numChildren
+            self.minHeight = MIN_WINDOW_HEIGHT
             if self.width < self.spacing * (numChildren + 1):
                 return  # Not enough space to distribute equally
             for i, child in enumerate(self.childWindows):
@@ -55,8 +52,8 @@ class Container(Widget):
                 child.y = 0
 
         elif self.axis == 'vertical':
-            self.minWindowWidth = MIN_WINDOW_WIDTH
-            self.minWindowHeight = MIN_WINDOW_HEIGHT*numChildren
+            self.minWidth = MIN_WINDOW_WIDTH
+            self.minHeight = MIN_WINDOW_HEIGHT*numChildren
             # spaces between children, on the top and on the bottom
             totalSpacing = self.spacing * (numChildren + 1)
             if self.height < totalSpacing:
@@ -73,18 +70,12 @@ class Container(Widget):
             return
 
         # apply minimum size constraints
-        height = max(height, self.minWindowHeight)
-        width = max(width, self.minWindowWidth)
+        height = max(height, self.minHeight)
+        width = max(width, self.minWidth)
 
         # calculate the differences between current width/height and previous width/height
         dw = width - self.width
         dh = height - self.height
-
-        self.width, self.height = width, height
-        if self.parentWindow.height < height:
-            self.parentWindow.height = height
-        if self.parentWindow.width < width:
-            self.parentWindow.width = width
 
         totalSpacing = self.spacing * (numChildren + 1)
 
