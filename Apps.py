@@ -57,7 +57,7 @@ class Calculator(Widget):
             '0', '00','.', '='
         ]
        
-        self.container = Container(0,50,width,height-50,"Calculator Container",'vertical',0)
+        self.container = Container(0,50,width,height-62,"Calculator Container",'vertical',0)
         self.container.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right
         
         self.label = Label(0, 10, width,40, "Label", "0", COLOR_CLEAR)
@@ -137,18 +137,18 @@ class Calculator(Widget):
 class Colors(Widget):
     def __init__(self, originX, originY, width, height):
         super().__init__(originX, originY, width, height, 'Colors')
-        self.backgroundColor = COLOR_LIGHT_GREEN
+        self.backgroundColor = COLOR_WHITE
         self.container = Container(
-            0, 15, width, height-15, "ColorsContainer", 'vertical', 10)
+            0, 20, width, height-20, "ColorsContainer", 'vertical', 10)
         self.container.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right
         self.addComponents()
 
     def addComponents(self):
-        self.sliderR = Slider(0, 0, self.width, 75, 'SliderR', COLOR_RED)
+        self.sliderR = Slider(0, 0, self.width, 50, 'SliderR', COLOR_RED)
 
-        self.sliderG = Slider(0, 0, self.width, 75, 'SliderG', COLOR_GREEN)
+        self.sliderG = Slider(0, 0, self.width, 50, 'SliderG', COLOR_GREEN)
 
-        self.sliderB = Slider(0, 0, self.width, 75, 'SliderB', COLOR_BLUE)
+        self.sliderB = Slider(0, 0, self.width, 50, 'SliderB', COLOR_BLUE)
 
         self.color = self.mapFromRgbToHex()
         self.colorLabel = Label(0, 0, self.width, 30,
