@@ -87,18 +87,17 @@ class Container(Widget):
 
         if self.axis == 'horizontal':
             for i, child in enumerate(self.childWindows):
-                child.width = (self.width - totalSpacing) // numChildren
+                child.width = (self.width  - totalSpacing) // numChildren
                 child.height = self.height + dh
-                child.x = self.spacing + self.x + i * (child.width + self.spacing)
-                child.y = self.y
+                child.x = self.spacing + i * (child.width + self.spacing)
+                child.y = 0
 
         elif self.axis == 'vertical':
             for i, child in enumerate(self.childWindows):
                 child.width = self.width + dw
                 child.height = (self.height - totalSpacing) // numChildren
-                child.x = self.x
-                child.y = self.spacing + self.y + \
-                        i * (child.height + self.spacing)
+                child.x = 0
+                child.y = self.spacing + i * (child.height + self.spacing)
 
 class Label(Widget):
     def __init__(self, originX, originY, width, height, identifier, text, backgroundColor):
