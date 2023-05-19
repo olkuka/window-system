@@ -30,6 +30,7 @@ class Window:
 
         self.isHidden = False
         self.taskbarIconX = None
+        self.addDecorations = True
 
         self.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left
 
@@ -37,12 +38,10 @@ class Window:
         # apply minimum size constraints
         width = max(width, MIN_WINDOW_WIDTH)
         height = max(height, MIN_WINDOW_HEIGHT)
-        
-        rightMargin, bottomMargin = 0, 0
-        if x + width > self.width:
-            rightMargin = x + width - self.width
-        if y + height > self.height:
-            bottomMargin = y + height - self.height
+
+        # calculate the differences between current width/height and previous width/height
+        dw = width - self.width
+        dh = height - self.height
 
         # set new coordinates, width and height
         self.x = x
@@ -50,31 +49,44 @@ class Window:
         self.width = width
         self.height = height
 
-        # for child in self.childWindows:
-        #     # if child.layoutAnchors & LayoutAnchor.top and child.layoutAnchors & LayoutAnchor.right:
-        #     #     child.x = self.x + self.width - child.width - rightMargin
+        for child in self.childWindows:
+            # left anchor
+            if child.layoutAnchors & LayoutAnchor.left:
+                # if not top-left or bottom-left corner
+                if not child.layoutAnchors & LayoutAnchor.top and not child.layoutAnchors & LayoutAnchor.bottom:
+                    # change child y coordinate to be exactly at the half of the vertical axis
+                    child.y = self.height // 2 - child.height//2
 
-        #     if child.layoutAnchors & LayoutAnchor.right:
-        #         child.x = self.x + self.width - child.width - rightMargin
+            # right anchor
+            if child.layoutAnchors & LayoutAnchor.right:
+                # if not top-right or bottom-right corner
+                if not child.layoutAnchors & LayoutAnchor.top and not child.layoutAnchors & LayoutAnchor.bottom:
+                    # change child y coordinate to be exactly at the half of the vertical axis
+                    child.y = self.height // 2 - child.height//2
+                # change child x coordinate to move along with the right window margin
+                child.x += dw
 
-        #     if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.right:
-        #         child.x = self.x + self.width - child.width - rightMargin
-        #         child.y = self.y + self.height - child.height - bottomMargin
+            # top anchor (but not top-left or top-right)
+            if child.layoutAnchors & LayoutAnchor.top and not child.layoutAnchors & LayoutAnchor.right and not child.layoutAnchors & LayoutAnchor.left:
+                # change child x coordinate to be exactly at the half of the horizontal axis
+                child.x = self.width // 2 - child.width//2
 
-        #     if child.layoutAnchors & LayoutAnchor.bottom:
-        #         child.y = self.y + self.height - child.height - bottomMargin
+            # bottom anchor
+            if child.layoutAnchors & LayoutAnchor.bottom:
+                # if only bottom anchor (not bottom-left or bottom-right)
+                if not child.layoutAnchors & LayoutAnchor.right and not child.layoutAnchors & LayoutAnchor.left:
+                    child.x = self.width // 2 - child.width//2
+                # change child y coordinate to move along with the bottom window margin
+                child.y += dh
 
-        #     if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.left:
-        #         child.y = self.y + self.height - child.height - bottomMargin
-
-        #     if child.layoutAnchors & LayoutAnchor.left and child.layoutAnchors & LayoutAnchor.right:
-        #         # child.y = self.y + self.height - child.height - bottomMargin
-        #         child.width = max(width - child.x - rightMargin, MIN_WINDOW_WIDTH)
-
-        #     if child.layoutAnchors & LayoutAnchor.bottom and child.layoutAnchors & LayoutAnchor.top:
-        #         child.y = self.height - child.height - bottomMargin
-
-
+            # right, left, top, bottom anchors - for windows that have every anchor
+            if child.layoutAnchors & LayoutAnchor.right and child.layoutAnchors & LayoutAnchor.left and child.layoutAnchors & LayoutAnchor.top and child.layoutAnchors & LayoutAnchor.bottom:
+                # ensure that window is always in the middle by changing coordinates
+                child.x = self.width // 2 - child.width//2
+                child.y = self.height // 2 - child.height//2
+                # additionally change the width and the height
+                child.width += dw
+                child.height += dh
 
     def addChildWindow(self, window):
         # add window to the end of childWindows list
@@ -199,7 +211,8 @@ class Screen(Window):
         for child in self.childWindows:
             if not child.isHidden:
                 child.draw(ctx)
-                self.windowSystem.windowManager.decorateWindow(child, ctx)
+                if child.addDecorations: 
+                    self.windowSystem.windowManager.decorateWindow(child, ctx)
 
     def windowDecorationAtLocation(self, x, y):
         for child in reversed(self.childWindows):
