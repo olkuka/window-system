@@ -92,13 +92,8 @@ class Container(Widget):
                 child.width = self.width + dw
                 child.height = (self.height - totalSpacing) // numChildren
                 child.x = 0
-<<<<<<< HEAD
-                child.y = self.spacing + i * (child.height + self.spacing)
-                
-=======
                 child.y = i * (child.height + self.spacing)
                 child.resize(child.x ,child.y,child.width,child.height)
->>>>>>> e3ea1674d8c07fe55e3c59afeacfa0b0ea22493a
         
 
 class Label(Widget):
