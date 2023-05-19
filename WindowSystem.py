@@ -77,11 +77,11 @@ class WindowSystem(GraphicsEventSystem):
         # s4_5.backgroundColor = COLOR_BLACK
         # s4_5.layoutAnchors = LayoutAnchor.left
 
-        helloWorld = HelloWorld(100,100,400,400)
-        self.screen.addChildWindow(helloWorld)
+        # helloWorld = HelloWorld(100,100,400,400)
+        # self.screen.addChildWindow(helloWorld)
         
-        cal = Calculator(200,200,300,500)
-        self.screen.addChildWindow(cal)
+        # cal = Calculator(200,200,300,500)
+        # self.screen.addChildWindow(cal)
 
 
         

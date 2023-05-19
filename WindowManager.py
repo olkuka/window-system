@@ -32,7 +32,7 @@ class WindowManager:
                 if child.identifier != 'StartMenu' and child.taskbarIconX <= x <= child.taskbarIconX + 40:
                     return child
         return None
-    
+
     def hitStartMenu(self, x, y):
         # check if the click is within the taskbar and if it's a start menu
         if y >= self.windowSystem.screen.height - self.taskBarHeight and 0 <= x <= 40:
@@ -103,8 +103,8 @@ class WindowManager:
         ctx.setFillColor(COLOR_LIGHT_GRAY)
         ctx.fillRect(0, self.windowSystem.height - 40,
                      self.windowSystem.width, self.windowSystem.height)
-        
-         # draw a start menu icon
+
+        # draw a start menu icon
         ctx.setFillColor(COLOR_GRAY)
         ctx.fillRect(0, self.windowSystem.height -
                      40, 40, self.windowSystem.height)
@@ -128,7 +128,7 @@ class WindowManager:
 
                 child.taskbarIconX = currX
                 ctx.fillRect(currX, self.windowSystem.height - 40,
-                            currX + 40, self.windowSystem.height)
+                             currX + 40, self.windowSystem.height)
                 ctx.drawString(
                     child.identifier[0], currX + 13, self.windowSystem.height - 32)
                 currX = currX + 42
