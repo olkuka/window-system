@@ -67,14 +67,24 @@ class WindowSystem(GraphicsEventSystem):
         # bottomRight.backgroundColor = COLOR_GRAY
         # bottomRight.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right
 
-        # topLeftBottomRight = Window(150, 150, 100, 100, "SCREEN_3-2")
-        # s2.addChildWindow(topLeftBottomRight)
-        # topLeftBottomRight.backgroundColor = COLOR_BLUE
-        # topLeftBottomRight.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right | LayoutAnchor.top | LayoutAnchor.left
+        # s4_4 = Window(200, 380, 10, 10, "SCREEN_3-4")
+        # s4.addChildWindow(s4_4)
+        # s4_4.backgroundColor = COLOR_BLACK
+        # s4_4.layoutAnchors = LayoutAnchor.bottom
 
-        # helloWorld = HelloWorld(100, 100, 400, 400, "1")
+        # s4_5 = Window(10, 200, 10, 10, "SCREEN_3-5")
+        # s4.addChildWindow(s4_5)
+        # s4_5.backgroundColor = COLOR_BLACK
+        # s4_5.layoutAnchors = LayoutAnchor.left
+
+        # helloWorld = HelloWorld(100,100,400,400)
         # self.screen.addChildWindow(helloWorld)
+        
+        # cal = Calculator(200,200,300,500)
+        # self.screen.addChildWindow(cal)
 
+
+        
     """
     WINDOW MANAGEMENT
     """
@@ -239,7 +249,11 @@ class WindowSystem(GraphicsEventSystem):
         self.mousePressY = y
 
     def handleKeyPressed(self, char):
-        pass
+        pointedWindow = self.screen.childWindows[-1]
+        if type(pointedWindow) is Calculator:
+            print(char)
+            pointedWindow.key_pressed(char)
+            self.requestRepaint()
 
 # Let's start your window system!
 w = WindowSystem(800, 600)

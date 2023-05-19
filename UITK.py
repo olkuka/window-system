@@ -48,8 +48,8 @@ class Container(Widget):
                 child.width = (self.width - self.spacing *
                                (numChildren + 1)) // numChildren
                 child.height = self.height
-                child.x = self.x + i * (child.width + self.spacing)
-                child.y = self.y
+                child.x = i * (child.width + self.spacing)
+                child.y = 0
 
         elif self.axis == 'vertical':
             self.minWindowWidth = self.width
@@ -61,8 +61,8 @@ class Container(Widget):
             for i, child in enumerate(self.childWindows):
                 child.width = self.width
                 child.height = (self.height - totalSpacing) // numChildren
-                child.x = self.x
-                child.y = self.y + i * (child.height + self.spacing)
+                child.x = 0
+                child.y = i * (child.height + self.spacing)
 
     def resize(self, x, y, width, height):
         numChildren = len(self.childWindows)
