@@ -176,8 +176,8 @@ class Slider(Widget):
         self.isHandlePressed = False  # if the slider is currently pressed
         self.handleX = min(6, self.width)  # handle X coordinate
         self.handleY = min(6, self.height)  # handle Y coordinate
-        self.handleWidth = self.width//6
-        self.handleHeight = self.height//2
+        self.handleWidth = self.width/6
+        self.handleHeight = self.height/2
 
         # inner rectangle
         self.innerX1 = 5

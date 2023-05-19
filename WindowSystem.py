@@ -18,73 +18,7 @@ class WindowSystem(GraphicsEventSystem):
     def start(self):
         self.screen = Screen(self)
         self.windowManager = WindowManager(self)
-
-        # add some windows to test
-        # s2 = self.createWindowOnScreen(10, 10, 400, 400, "First App")
-        # s2.backgroundColor = COLOR_GREEN
-
-        # colorsApp = Colors(500, 100, 200, 300,
-        #                    self.windowManager.titleBarHeight)
-        # self.screen.addChildWindow(colorsApp)
-
-        # left = Window(10, 150, 100, 100, "SCREEN_3-2")
-        # s2.addChildWindow(left)
-        # left.backgroundColor = COLOR_BLACK
-        # left.layoutAnchors = LayoutAnchor.left 
-
-        # top = Window(150, 10, 100, 100, "SCREEN_3-2")
-        # s2.addChildWindow(top)
-        # top.backgroundColor = COLOR_WHITE
-        # top.layoutAnchors = LayoutAnchor.top 
-
-        # right = Window(290, 150, 100, 100, "SCREEN_3-2")
-        # s2.addChildWindow(right)
-        # right.backgroundColor = COLOR_PURPLE
-        # right.layoutAnchors = LayoutAnchor.right
-
-        # bottom = Window(150, 290, 100, 100, "SCREEN_3-2")
-        # s2.addChildWindow(bottom)
-        # bottom.backgroundColor = COLOR_BROWN
-        # bottom.layoutAnchors = LayoutAnchor.bottom
-
-        # topLeft = Window(10, 10, 100, 100, "SCREEN_3-2")
-        # s2.addChildWindow(topLeft)
-        # topLeft.backgroundColor = COLOR_PINK
-        # topLeft.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left
-
-        # topRight = Window(290, 10, 100, 100, "SCREEN_3-2")
-        # s2.addChildWindow(topRight)
-        # topRight.backgroundColor = COLOR_YELLOW
-        # topRight.layoutAnchors = LayoutAnchor.top | LayoutAnchor.right
-
-        # bottomLeft = Window(10, 290, 100, 100, "SCREEN_3-2")
-        # s2.addChildWindow(bottomLeft)
-        # bottomLeft.backgroundColor = COLOR_RED
-        # bottomLeft.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.left
-
-        # bottomRight = Window(290, 290, 100, 100, "SCREEN_3-2")
-        # s2.addChildWindow(bottomRight)
-        # bottomRight.backgroundColor = COLOR_GRAY
-        # bottomRight.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right
-
-        # s4_4 = Window(200, 380, 10, 10, "SCREEN_3-4")
-        # s4.addChildWindow(s4_4)
-        # s4_4.backgroundColor = COLOR_BLACK
-        # s4_4.layoutAnchors = LayoutAnchor.bottom
-
-        # s4_5 = Window(10, 200, 10, 10, "SCREEN_3-5")
-        # s4.addChildWindow(s4_5)
-        # s4_5.backgroundColor = COLOR_BLACK
-        # s4_5.layoutAnchors = LayoutAnchor.left
-
-        # helloWorld = HelloWorld(100,100,400,400)
-        # self.screen.addChildWindow(helloWorld)
-        
-        # cal = Calculator(200,200,300,500)
-        # self.screen.addChildWindow(cal)
-
-
-        
+  
     """
     WINDOW MANAGEMENT
     """
