@@ -54,8 +54,8 @@ class Container(Widget):
             child_height = self.height
 
             for i, child in enumerate(self.childWindows):
-                child_x = self.x + i * (child_width + self.spacing)
-                child_y = self.y
+                child_x = i * (child_width + self.spacing)
+                child_y = 0
                 child.resize(child_x, child_y, child_width, child_height)
 
         elif self.axis == 'vertical':
@@ -70,26 +70,12 @@ class Container(Widget):
             
 
             for i, child in enumerate(self.childWindows):
-                child_x = self.x
-                child_y = self.y+i * (child_height + self.spacing)
+                child_x = 0
+                child_y = i * (child_height + self.spacing)
                 child.resize(child_x, child_y, child_width, child_height)
                 
 
-        elif self.axis == 'grid':
-
-            if self.width < self.spacing * (num_children - 1):
-                return  # Not enough space to distribute equally
             
-            if self.height < self.spacing * (num_children - 1):
-                return  # Not enough space to distribute equally
-
-            child_width = (self.width - self.spacing * (num_children - 1)) // num_children
-            child_height = (self.height - self.spacing * (num_children - 1)) // num_children
-
-            for i, child in enumerate(self.childWindows):
-                child_x = self.x + i * (child_width + self.spacing)
-                child_y = self.y + i * (child_height + self.spacing)
-                child.resize(child_x, child_y, child_width, child_height)
 
 class Label(Widget):
     def __init__(self, originX, originY, width, height, identifier, text, backgroundColor):

@@ -66,6 +66,8 @@ class WindowSystem(GraphicsEventSystem):
         helloWorld = HelloWorld(100,100,400,400,"1")
         self.screen.addChildWindow(helloWorld)
         
+        cal = Calculator(200,200,300,500,"Calculator")
+        self.screen.addChildWindow(cal)
 
 
         
@@ -229,7 +231,11 @@ class WindowSystem(GraphicsEventSystem):
         self.mousePressY = y
 
     def handleKeyPressed(self, char):
-        pass
+        pointedWindow = self.screen.childWindows[-1]
+        if type(pointedWindow) is Calculator:
+            print(char)
+            pointedWindow.key_pressed(char)
+            self.requestRepaint()
 
 
 # Let's start your window system!
