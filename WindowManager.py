@@ -71,7 +71,7 @@ class WindowManager:
             ctx.drawLine(window.width - 45, 10, window.width - 35, 10)
 
             # Draw the resize indicator in the bottom-right corner
-            ctx.setFillColor(COLOR_LIGHT_GRAY)
+            ctx.setFillColor(COLOR_BLACK)
             ctx.fillRect(window.width - 10, window.height -
                          10, window.width, window.height)
 

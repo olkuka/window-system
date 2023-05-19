@@ -212,7 +212,7 @@ class Screen(Window):
         self.windowSystem.windowManager.drawDesktop(ctx)
         self.windowSystem.windowManager.drawTaskbar(ctx)
 
-        # draw child window and decoration
+        # draw child windows and decorations
         for child in self.childWindows:
             if not child.isHidden:
                 child.draw(ctx)
