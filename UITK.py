@@ -23,6 +23,8 @@ class Container(Widget):
         super().__init__(originX, originY, width, height, identifier)
         self.axis = axis
         self.spacing = spacing
+        self.minWindowHeight = MIN_WINDOW_WIDTH
+        self.minWindowWidth = MIN_WINDOW_WIDTH
 
     def addChildWindow(self, window):
         super().addChildWindow(window)
@@ -38,16 +40,20 @@ class Container(Widget):
             return
 
         if self.axis == 'horizontal':
-            if self.width < self.spacing * (numChildren - 1):
+            self.minWindowWidth = sum(child.width for child in self.childWindows)
+            self.minWindowHeight = self.height
+            if self.width < self.spacing * (numChildren + 1):
                 return  # Not enough space to distribute equally
             for i, child in enumerate(self.childWindows):
                 child.width = (self.width - self.spacing *
-                               (numChildren - 1)) // numChildren
+                               (numChildren + 1)) // numChildren
                 child.height = self.height
                 child.x = self.x + i * (child.width + self.spacing)
                 child.y = self.y
 
         elif self.axis == 'vertical':
+            self.minWindowWidth = self.width
+            self.minWindowHeight = sum(child.height for child in self.childWindows)
             # spaces between children, on the top and on the bottom
             totalSpacing = self.spacing * (numChildren + 1)
             if self.height < totalSpacing:
@@ -64,39 +70,35 @@ class Container(Widget):
             return
 
         # apply minimum size constraints
-        width = max(width, MIN_WINDOW_WIDTH)
-        height = max(height, MIN_WINDOW_HEIGHT)
+        height = max(height, self.minWindowHeight)
+        width = max(width, self.minWindowWidth)
 
         # calculate the differences between current width/height and previous width/height
         dw = width - self.width
         dh = height - self.height
 
+        self.width, self.height = width, height
+        if self.parentWindow.height < height:
+            self.parentWindow.height = height
+        if self.parentWindow.width < width:
+            self.parentWindow.width = width
+
+        totalSpacing = self.spacing * (numChildren + 1)
+
         if self.axis == 'horizontal':
-            self.spacing += dw
-            self.height = height
-            # check if there's enough space to distribute equally
-            if width >= self.spacing * (numChildren + 1):
-                self.width = width
-                for i, child in enumerate(self.childWindows):
-                    child.width = (self.width - self.spacing *
-                                   (numChildren - 1)) // numChildren
-                    child.height = self.height
-                    child.x = self.x + i * (child.width + self.spacing)
-                    child.y = self.y
+            for i, child in enumerate(self.childWindows):
+                child.width = (self.width - totalSpacing) // numChildren
+                child.height = self.height + dh
+                child.x = self.spacing + self.x + i * (child.width + self.spacing)
+                child.y = self.y
 
         elif self.axis == 'vertical':
-            self.spacing += dh
-            self.width = width
-            totalSpacing = self.spacing * (numChildren + 1)
-            if height >= totalSpacing:
-                self.height = height
-                for i, child in enumerate(self.childWindows):
-                    child.width = width + dw
-                    child.height = (self.height - totalSpacing) // numChildren
-                    child.x = self.x
-                    child.y = self.spacing + self.y + \
+            for i, child in enumerate(self.childWindows):
+                child.width = self.width + dw
+                child.height = (self.height - totalSpacing) // numChildren
+                child.x = self.x
+                child.y = self.spacing + self.y + \
                         i * (child.height + self.spacing)
-
 
 class Label(Widget):
     def __init__(self, originX, originY, width, height, identifier, text, backgroundColor):

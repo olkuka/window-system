@@ -12,25 +12,22 @@ class HelloWorld(Widget):
         self.backgroundColor = COLOR_WHITE
         self.container = Container(
             0, 0, width, height-50, "HelloWorldContainer", 'vertical', 10)
+        self.container.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right
         self.greetingText = Label(
             0, 0, 10, 10, "text", "Select a language!", COLOR_CLEAR)
-        self.greetingText.layoutAnchors = LayoutAnchor.top
 
         self.germanBtn = Button(0, 0, 200, 51, "Btn1", "Deutsch",
                                 COLOR_GRAY, lambda: self.clickLanguageBtn("Guten Tag"))
-        # self.germanBtn.layoutAnchors = LayoutAnchor.top
 
         self.englishBtn = Button(0, 0, 200, 51, "Btn2", "English",
                                  COLOR_GRAY, lambda: self.clickLanguageBtn("Good morning"))
-        # self.englishBtn.layoutAnchors = LayoutAnchor.top
 
         self.frenchBtn = Button(0, 0, 200, 51, "Btn3", "Français",
                                 COLOR_GRAY, lambda: self.clickLanguageBtn("Bonjour"))
-        # self.frenchBtn.layoutAnchors = LayoutAnchor.top
 
         self.quitBtn = Button(self.width-50, self.height-30, 40, 20, "quitBtn",
                               "Quit", COLOR_GRAY, lambda: self.removeFromParentWindow())
-        self.frenchBtn.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right
+        self.quitBtn.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right
 
         self.addChildWindow(self.container)
         self.container.addChildWindow(self.greetingText)
@@ -80,7 +77,7 @@ class Colors(Widget):
         super().__init__(originX, originY, width, height, 'Colors')
         self.backgroundColor = COLOR_LIGHT_GREEN
         self.container = Container(
-            0, 15, width, height-15, "ColorsContainer", 'vertical', 5)
+            0, 15, width, height-15, "ColorsContainer", 'vertical', 10)
         self.container.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right
         self.addComponents()
 
