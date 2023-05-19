@@ -27,7 +27,7 @@ class HelloWorld(Widget):
 
         self.quitBtn = Button(self.width-50, self.height-30, 40, 20, "quitBtn",
                               "Quit", COLOR_GRAY, lambda: self.removeFromParentWindow())
-        self.quitBtn.layoutAnchors = LayoutAnchor.bottom | LayoutAnchor.right
+        self.quitBtn.layoutAnchors = LayoutAnchor.right | LayoutAnchor.bottom
 
         self.addChildWindow(self.container)
         self.container.addChildWindow(self.greetingText)

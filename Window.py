@@ -12,8 +12,8 @@ from collections import namedtuple
 
 AllAnchors = namedtuple('AllAnchors', "top right bottom left")
 LayoutAnchor = AllAnchors(1 << 0, 1 << 1, 1 << 2, 1 << 3)
-MIN_WINDOW_WIDTH = 50
-MIN_WINDOW_HEIGHT = 50
+MIN_WINDOW_WIDTH = 5
+MIN_WINDOW_HEIGHT = 5
 
 
 class Window:
@@ -33,11 +33,13 @@ class Window:
         self.addDecorations = True
 
         self.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left
+        self.minWidth = width
+        self.minHeight = height
 
     def resize(self, x, y, width, height):
         # apply minimum size constraints
-        width = max(width, MIN_WINDOW_WIDTH)
-        height = max(height, MIN_WINDOW_HEIGHT)
+        width = max(width, self.minWidth)
+        height = max(height, self.minHeight)
 
         # calculate the differences between current width/height and previous width/height
         dw = width - self.width
@@ -62,7 +64,7 @@ class Window:
                 # if not top-right or bottom-right corner
                 if not child.layoutAnchors & LayoutAnchor.top and not child.layoutAnchors & LayoutAnchor.bottom:
                     # change child y coordinate to move along with a vertical axis
-                    child.y = child.y - dh
+                    child.y = child.y + dh
                 # change child x coordinate to move along with the right window margin
                 child.x += dw
 
@@ -89,6 +91,7 @@ class Window:
                 child.y = child.y - dh
 
             child.resize(child.x, child.y, child.width, child.height)
+
 
     def addChildWindow(self, window):
         # add window to the end of childWindows list
