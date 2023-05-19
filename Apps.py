@@ -57,7 +57,7 @@ class Calculator(Widget):
             '0', '00','.', '='
         ]
        
-        self.container = Container(0,10,width,(height-10),"Calculator Container",'vertical',0)
+        self.container = Container(0,0,width,height,"Calculator Container",'vertical',0)
         self.container.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right
         
         self.label = Label(0, 10, width,height, "Label", "0", COLOR_CLEAR)
@@ -65,6 +65,8 @@ class Calculator(Widget):
 
         for i in range(5):
             childContainer = Container(0,0,self.width,self.height,"container"+str(i),'horizontal',0)
+            childContainer.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right
+        
             self.container.addChildWindow(childContainer)
 
         button_row = 1
