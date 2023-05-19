@@ -73,7 +73,7 @@ class Calculator(Widget):
         for btn_text in self.buttons :
             
             # store callable object with partcial
-            button = Button(0, 0, 50, 50, btn_text, btn_text, COLOR_LIGHT_GRAY,partial(self.button_clicked,btn_text))
+            button = Button(0, 0, 50, 50, btn_text, btn_text, COLOR_LIGHT_GRAY, partial(self.button_clicked,btn_text))
             
             if button_row == 1 or button_column == 3:
                 button.normalColor = '#f7e436'
