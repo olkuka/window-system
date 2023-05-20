@@ -125,6 +125,7 @@ class WindowSystem(GraphicsEventSystem):
                     windowClicked.handleMouseClicked(x, y)
                 else:
                     self.screen.handleMouseClicked(x, y)
+        else : self.setAllSliderNormal(self.screen)
 
     def handleMouseMoved(self, x, y):
         self.mousePressX = x
@@ -136,15 +137,20 @@ class WindowSystem(GraphicsEventSystem):
         if type(window) is Button:
             window.BtnState = BtnState.Hovering
             self.requestRepaint()
-        # else :
-        #     self.setAllBtnNormal(self.screen)
-
+        
     def setAllBtnNormal(self, window):
         for child in window.childWindows:
             if type(child) is Button and child.BtnState is not BtnState.Normal:
                 child.BtnState = BtnState.Normal
                 self.requestRepaint()
             self.setAllBtnNormal(child)
+
+    def setAllSliderNormal(self, window):
+        for child in window.childWindows:
+            if type(child) is Slider and child.isHandlePressed == True:
+                child.isHandlePressed = False
+                self.requestRepaint()
+            self.setAllSliderNormal(child)
 
     def handleMouseDragged(self, x, y):
         # check if user pressed on the title bar
@@ -178,7 +184,7 @@ class WindowSystem(GraphicsEventSystem):
             # request a repaint
             self.requestRepaint()
 
-        elif type(window) is Slider:
+        elif type(window) is Slider and window.isHandlePressed:
             # calculate new handle coordinates based on above distances
             localX, _ = window.convertPositionFromScreen(x, y)
             window.slideHandle(localX)
