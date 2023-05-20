@@ -57,10 +57,10 @@ class Calculator(Widget):
             '0', '00','.', '='
         ]
        
-        self.container = Container(0,50,width,height-62,"Calculator Container",'vertical',0)
+        self.container = Container(0,70,width,height-82,"Calculator Container",'vertical',0)
         self.container.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right
         
-        self.label = Label(0, 10, width,40, "Label", "0", COLOR_CLEAR)
+        self.label = Label(0, 10, width,60, "Label", "0", COLOR_CLEAR)
         self.label.layoutAnchors = LayoutAnchor.top
         self.addChildWindow(self.label)
 
@@ -113,8 +113,10 @@ class Calculator(Widget):
         if key == 'C':
             self.current_input = ""
         elif key == '+/-':
-            
-            self.current_input = str(int(self.current_input)*-1)
+            try:
+                self.current_input = str(int(self.current_input)*-1)
+            except :
+                self.current_input = "Error"
         elif key == '=':
             try:
         
@@ -128,10 +130,6 @@ class Calculator(Widget):
             self.current_input += key
         
         self.label.text = self.current_input
-
-    # def draw(self, ctx):
-    #     super().draw(ctx)
-        #self.container.draw(ctx)
 
 
 class Colors(Widget):

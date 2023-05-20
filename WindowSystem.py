@@ -64,6 +64,9 @@ class WindowSystem(GraphicsEventSystem):
         self.mousePressX = x
         self.mousePressY = y
 
+        self.clickedX =x
+        self.clickedY = y
+
         # check the window at the given location
         window = self.screen.childWindowAtLocation(x, y)
         self.bringWindowToFront(window)
@@ -80,7 +83,7 @@ class WindowSystem(GraphicsEventSystem):
 
     def handleMouseReleased(self, x, y):
         # check if the mouse release coordinates match the mouse press coordinates
-        if x == self.mousePressX and y == self.mousePressY:
+        if x == self.clickedX and y == self.clickedY:
             # check the window Decoration at the given location and then return that window
             decorationClicked, isResizable = self.screen.windowDecorationAtLocation(
                 x, y)
