@@ -28,13 +28,14 @@ class Window:
         self.childWindows = []
         self.parentWindow = None
 
-        self.isHidden = False   # indicates if window is currently minimized 
-        self.taskbarIconX = None    # position of the window icon on the taskbar 
-        self.addDecorations = True  # indicates if decorations should be added to this window (default: True)
+        self.isHidden = False   # indicates if window is currently minimized
+        self.taskbarIconX = None    # position of the window icon on the taskbar
+        # indicates if decorations should be added to this window (default: True)
+        self.addDecorations = True
 
         self.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left   # default anchors
         self.minWidth = width   # minimum window width (for resizing)
-        self.minHeight = height # minimum window height (for resizing)
+        self.minHeight = height  # minimum window height (for resizing)
 
     def resize(self, x, y, width, height):
         """
@@ -92,8 +93,9 @@ class Window:
                 # ensure that window coordinates changes when the width is changed
                 child.x -= dw
                 child.y -= dh
-            
-            child.resize(child.x, child.y, child.width, child.height)   # recursively resize children
+
+            # recursively resize children
+            child.resize(child.x, child.y, child.width, child.height)
 
     def addChildWindow(self, window):
         """
@@ -114,14 +116,16 @@ class Window:
         Returns the top-most child window if there exists any. 
         """
         if self.hitTest(x, y):  # check if the current window contains the provided point
-            for child in reversed(self.childWindows):   # search for child windows in a reverse order (top-most to bottom-most)
+            # search for child windows in a reverse order (top-most to bottom-most)
+            for child in reversed(self.childWindows):
                 # convert the local coordinates to the child window's coordinate system
                 childX = x - child.x
                 childY = y - child.y
-                result = child.childWindowAtLocation(childX, childY)    # recursively check child windows
-                if result: 
+                # recursively check child windows
+                result = child.childWindowAtLocation(childX, childY)
+                if result:
                     return result   # return the top-most child window found
-            return self # if no child window is found, return the current window
+            return self  # if no child window is found, return the current window
         return None
 
     def hitTest(self, x, y):
@@ -184,7 +188,8 @@ class Window:
         """
         Draws the plain window.
         """
-        ctx.setFillColor(self.backgroundColor)  # draw with the window's background color
+        ctx.setFillColor(
+            self.backgroundColor)  # draw with the window's background color
 
         if self.parentWindow:   # check if the window has a parent
             # convert the window's local origin to global coordinates
@@ -237,7 +242,8 @@ class Screen(Window):
             localX, localY = child.convertPositionFromScreen(x, y)
             if child.hitTestTitleBar(localX, localY):   # if there is a title bar
                 return child, False
-            elif child.hitTestResizeArea(localX, localY):   # if there is a resize indicator
+            # if there is a resize indicator
+            elif child.hitTestResizeArea(localX, localY):
                 return child, True
 
         return None, False

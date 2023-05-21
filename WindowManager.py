@@ -87,8 +87,8 @@ class WindowManager:
         """
         Handles mouse click on window decorations.
         """
-        if window.width - 15 <= x <= window.width - 5 and 5 <= y <= 15: # check if the close button was clicked
-            window.removeFromParentWindow() # remove window completely
+        if window.width - 15 <= x <= window.width - 5 and 5 <= y <= 15:  # check if the close button was clicked
+            window.removeFromParentWindow()  # remove window completely
 
         elif window.width - 45 <= x <= window.width - 35 and 5 <= y <= 15:  # check if minimize button was clicked
             window.isHidden = True  # set isHidden to True and bring the other window to the front
@@ -97,7 +97,8 @@ class WindowManager:
                     self.windowSystem.screen.childWindows[-2])
 
         else:
-            self.windowSystem.bringWindowToFront(window)    # bring this window to the front
+            self.windowSystem.bringWindowToFront(
+                window)    # bring this window to the front
 
     def drawDesktop(self, ctx):
         """
@@ -128,7 +129,7 @@ class WindowManager:
         ctx.setFont(Font(family='Helvetica', size=14, weight='normal'))
         # for every child draw its icon
         for child in sortedChildren:
-            if child.identifier != 'StartMenu': # don't draw an icon for a Start Menu because it's already drawn
+            if child.identifier != 'StartMenu':  # don't draw an icon for a Start Menu because it's already drawn
                 # if the window is a top-level window and is not currently hidden, set its color to blue
                 if child == self.windowSystem.screen.childWindows[-1] and child.isHidden == False:
                     ctx.setFillColor(COLOR_BLUE)
@@ -139,7 +140,7 @@ class WindowManager:
                 child.taskbarIconX = currX
                 ctx.fillRect(currX, self.windowSystem.height - 40,
                              currX + 40, self.windowSystem.height)
-            
+
                 ctx.setStrokeColor(COLOR_WHITE)
                 ctx.drawString(
                     child.identifier[0], currX + 13, self.windowSystem.height - 32)

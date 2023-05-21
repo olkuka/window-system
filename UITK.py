@@ -45,7 +45,7 @@ class Container(Widget):
         numChildren = len(self.childWindows)
         if numChildren == 0:
             return
-        
+
         totalSpacing = self.spacing * (numChildren - 1)
 
         if self.axis == 'horizontal':
@@ -95,21 +95,21 @@ class Container(Widget):
 
         if self.axis == 'horizontal':
             for i, child in enumerate(self.childWindows):
-                child.resize(child.x ,child.y,self.width,child.height)
-                child.width = (self.width  - totalSpacing) // numChildren
+                child.resize(child.x, child.y, self.width, child.height)
+                child.width = (self.width - totalSpacing) // numChildren
                 child.height = self.height + dh
                 child.x = i * (child.width + self.spacing)
                 child.y = 0
-                
+
         elif self.axis == 'vertical':
             for i, child in enumerate(self.childWindows):
-                child.resize(child.x ,child.y,child.width,child.height)
+                child.resize(child.x, child.y, child.width, child.height)
                 child.width = self.width + dw
                 child.height = (self.height - totalSpacing) // numChildren
                 child.x = 0
                 child.y = i * (child.height + self.spacing)
-               
-                
+
+
 class Label(Widget):
     def __init__(self, originX, originY, width, height, identifier, text, backgroundColor):
         super().__init__(originX, originY, width, height, identifier)
@@ -178,10 +178,10 @@ class Slider(Widget):
 
         self.isHandlePressed = False    # incicates if the slider is currently pressed
         self.handleX = min(6, self.width)
-        self.handleY = min(6, self.height) 
-        self.handleWidth = self.width/6     
+        self.handleY = min(6, self.height)
+        self.handleWidth = self.width/6
         self.handleHeight = self.height/2
-        
+
         # inner rectangle properties
         self.innerX1 = 5
         self.innerY1 = 5
@@ -189,21 +189,22 @@ class Slider(Widget):
         self.innerY2 = max(self.innerY1, self.innerY1 + self.handleHeight)
 
         self.value = 0  # slider value
-    
+
     def resize(self, x, y, width, height):
         """
         Overrides the window resize method and sets handle coordinates and inner rectangle coordinates properly.
         """
-        position = self.innerX1 + self.value*(self.innerX2 - self.innerX1) - self.handleWidth
+        position = self.innerX1 + self.value * \
+            (self.innerX2 - self.innerX1) - self.handleWidth
         position = min(position, self.innerX1)
         position = max(position, self.innerX1 + self.innerX2 - self.innerX1)
-            
+
         self.handleX = position
         self.handleWidth = self.width//6
         self.handleHeight = self.height//2
         self.innerX2 = max(self.innerX1, self.width - self.innerX1)
         self.innerY2 = max(self.innerY1, self.innerY1 + self.handleHeight)
-    
+
     def draw(self, ctx):
         """
         Draws the whole slider (outer rectangle, inner rectangle and a handle).
@@ -228,15 +229,16 @@ class Slider(Widget):
             ctx.setFillColor(COLOR_WHITE)
 
         # prevent the handle from drawing outside the inner rectangle borders
-        position = self.innerX1 + self.value*(self.innerX2-self.innerX1) - self.handleWidth
-        if position < self.innerX1 :
+        position = self.innerX1 + self.value * \
+            (self.innerX2-self.innerX1) - self.handleWidth
+        if position < self.innerX1:
             position = self.innerX1
         elif position > self.innerX1 + self.innerX2 - self.innerX1:
             position = self.innerX1 + self.innerX2 - self.innerX1
         self.handleX = position
 
         ctx.fillRect(self.handleX, self.handleY, self.handleX +
-                    self.handleWidth, self.handleY + self.handleHeight)
+                     self.handleWidth, self.handleY + self.handleHeight)
 
     def checkHandlePressed(self, x, y):
         """
@@ -250,14 +252,15 @@ class Slider(Widget):
         """
         if self.innerX1 <= newX <= self.innerX2:
             self.isHandlePressed = True
-            
-            #prevent handle from going out
-            newX = min(newX,self.innerX2 - self.handleWidth)
-            
+
+            # prevent handle from going out
+            newX = min(newX, self.innerX2 - self.handleWidth)
+
             # assign new X coordinate
             self.handleX = newX
             # update slider's value based on a current handle position
-            self.value = (self.handleX - self.innerX1) / (self.innerX2 - self.innerX1 - self.handleWidth)
-            
+            self.value = (self.handleX - self.innerX1) / \
+                (self.innerX2 - self.innerX1 - self.handleWidth)
+
         else:
             self.isHandlePressed = False

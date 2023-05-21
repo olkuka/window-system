@@ -13,7 +13,8 @@ class HelloWorld(Widget):
         self.backgroundColor = COLOR_WHITE
         self.container = Container(
             0, 0, width, height-50, 'HelloWorldContainer', 'vertical', 10)
-        self.container.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right  # set container's layout anchors
+        # set container's layout anchors
+        self.container.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right
         self.greetingText = Label(
             0, 0, 10, 10, 'GreetingText', 'Select a language!', COLOR_CLEAR)
 
@@ -53,7 +54,7 @@ class Calculator(Widget):
         super().__init__(originX, originY, width, height, 'Calculator')
         self.backgroundColor = COLOR_WHITE
 
-        self.currentInput = '' # stores the current input expression
+        self.currentInput = ''  # stores the current input expression
         self.buttons = [    # list of buttons on the calculator
             'C', '+/-', '%', '/',
             '7', '8', '9', '*',
@@ -66,7 +67,8 @@ class Calculator(Widget):
             0, 70, width, height-82, 'CalculatorContainer', 'vertical', 0)
         self.container.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left | LayoutAnchor.bottom | LayoutAnchor.right
 
-        self.label = Label(0, 10, width, 60, 'CalculatorLabel', '0', COLOR_CLEAR)
+        self.label = Label(
+            0, 10, width, 60, 'CalculatorLabel', '0', COLOR_CLEAR)
         self.label.layoutAnchors = LayoutAnchor.top
         self.addChildWindow(self.label)
 
@@ -120,14 +122,17 @@ class Calculator(Widget):
 
         elif key == '+/-':
             try:
-                self.currentInput = str(int(self.currentInput)*-1)    # negate the input number
+                # negate the input number
+                self.currentInput = str(int(self.currentInput)*-1)
             except:
                 self.currentInput = 'Error'    # handle error if input cannot be negated
 
         elif key == '=':
             try:
-                result = eval(self.currentInput)   # evaluate the input expression
-                self.currentInput = str(result)    # store the result as the current input
+                # evaluate the input expression
+                result = eval(self.currentInput)
+                # store the result as the current input
+                self.currentInput = str(result)
             except ZeroDivisionError:
                 self.currentInput = 'Error: Division by zero'   # handle division by zero error
             except:
