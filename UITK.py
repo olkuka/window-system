@@ -79,22 +79,22 @@ class Container(Widget):
 
         if self.axis == 'horizontal':
             for i, child in enumerate(self.childWindows):
-                
+                child.resize(child.x ,child.y,self.width,child.height)
                 child.width = (self.width  - totalSpacing) // numChildren
                 child.height = self.height + dh
                 child.x = i * (child.width + self.spacing)
                 child.y = 0
-                child.resize(child.x ,child.y,self.width,child.height)
+                
                 
 
         elif self.axis == 'vertical':
             for i, child in enumerate(self.childWindows):
-                
+                child.resize(child.x ,child.y,child.width,child.height)
                 child.width = self.width + dw
                 child.height = (self.height - totalSpacing) // numChildren
                 child.x = 0
                 child.y = i * (child.height + self.spacing)
-                child.resize(child.x ,child.y,child.width,child.height)
+               
                 
         
 
