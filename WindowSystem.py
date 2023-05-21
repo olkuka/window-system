@@ -184,7 +184,7 @@ class WindowSystem(GraphicsEventSystem):
             # request a repaint
             self.requestRepaint()
 
-        elif type(window) is Slider and window.isHandlePressed:
+        elif type(window) is Slider:
             # calculate new handle coordinates based on above distances
             localX, _ = window.convertPositionFromScreen(x, y)
             window.slideHandle(localX)

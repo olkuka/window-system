@@ -79,21 +79,23 @@ class Container(Widget):
 
         if self.axis == 'horizontal':
             for i, child in enumerate(self.childWindows):
-                child.resize(child.x ,child.y,self.width,child.height)
+                
                 child.width = (self.width  - totalSpacing) // numChildren
                 child.height = self.height + dh
                 child.x = i * (child.width + self.spacing)
                 child.y = 0
+                child.resize(child.x ,child.y,self.width,child.height)
                 
 
         elif self.axis == 'vertical':
             for i, child in enumerate(self.childWindows):
-                child.resize(child.x ,child.y,child.width,child.height)
+                
                 child.width = self.width + dw
                 child.height = (self.height - totalSpacing) // numChildren
                 child.x = 0
                 child.y = i * (child.height + self.spacing)
                 child.resize(child.x ,child.y,child.width,child.height)
+                
         
 
 class Label(Widget):
@@ -161,19 +163,21 @@ class Slider(Widget):
         self.handleY = min(6, self.height)  # handle Y coordinate
         self.handleWidth = self.width/6
         self.handleHeight = self.height/2
-
+        
         # inner rectangle
         self.innerX1 = 5
         self.innerY1 = 5
 
         self.value = 0  # sliders value
     
-    def resize(self, x, y, width, height):
+    def resize(self, x,y,width,height):
         
-        dw = width - self.width 
-        self.handleX -= dw
-        print(dw)
-        # super().resize(x, y, width, height)
+        position = self.innerX1+self.value*(self.innerX2-self.innerX1) - self.handleWidth
+        position = min(position,self.innerX1)
+        position = max(position,self.innerX1+(self.innerX2-self.innerX1))
+            
+        self.handleX = position
+        
     
     def draw(self, ctx):
         # draw the background
@@ -202,8 +206,16 @@ class Slider(Widget):
         else:
             ctx.setFillColor(COLOR_WHITE)
 
+
+        position = self.innerX1+self.value*(self.innerX2-self.innerX1) - self.handleWidth
+        if position < self.innerX1 :
+            position = self.innerX1
+        elif position > self.innerX1+(self.innerX2-self.innerX1):
+            position = self.innerX1+(self.innerX2-self.innerX1)
+        self.handleX = position
+
         ctx.fillRect(self.handleX, self.handleY, self.handleX +
-                     self.handleWidth, self.handleY + self.handleHeight)
+                    self.handleWidth, self.handleY + self.handleHeight)
 
     # check if x and y coordinates are on the slider's handle
     def checkHandlePressed(self, x, y):
@@ -211,12 +223,17 @@ class Slider(Widget):
 
     def slideHandle(self, newX):
         # check if the new X coordinate is within the inner rectangle
-        if self.innerX1 <= newX <= self.innerX2 - self.handleWidth:
+        if self.innerX1 <= newX <= self.innerX2:
             self.isHandlePressed = True
+            
+            #prevent handle from going out
+            newX = min(newX,self.innerX2 - self.handleWidth)
+            
             # assign new X coordinate
             self.handleX = newX
             # update slider's value based on a current handle position
             self.value = (self.handleX - self.innerX1) / \
                 (self.innerX2 - self.innerX1 - self.handleWidth)
+            
         else:
             self.isHandlePressed = False
