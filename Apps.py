@@ -39,8 +39,6 @@ class HelloWorld(Widget):
     def clickLanguageBtn(self, text):
         self.greetingText.text = text
 
-    # def draw(self, ctx):
-    #     super().draw(ctx)
 
 
 class Calculator(Widget):
