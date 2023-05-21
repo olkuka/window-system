@@ -18,7 +18,7 @@ class WindowSystem(GraphicsEventSystem):
     def start(self):
         self.screen = Screen(self)
         self.windowManager = WindowManager(self)
-  
+        
     """
     WINDOW MANAGEMENT
     """
@@ -64,7 +64,7 @@ class WindowSystem(GraphicsEventSystem):
         self.mousePressX = x
         self.mousePressY = y
 
-        self.clickedX =x
+        self.clickedX = x
         self.clickedY = y
 
         # check the window at the given location
@@ -82,6 +82,9 @@ class WindowSystem(GraphicsEventSystem):
         self.requestRepaint()
 
     def handleMouseReleased(self, x, y):
+
+        
+
         # check if the mouse release coordinates match the mouse press coordinates
         if x == self.clickedX and y == self.clickedY:
             # check the window Decoration at the given location and then return that window
@@ -125,7 +128,11 @@ class WindowSystem(GraphicsEventSystem):
                     windowClicked.handleMouseClicked(x, y)
                 else:
                     self.screen.handleMouseClicked(x, y)
-        else : self.setAllSliderNormal(self.screen)
+        else : 
+            self.setAllSliderNormal(self.screen)
+            self.setAllBtnNormal(self.screen)
+
+            
 
     def handleMouseMoved(self, x, y):
         self.mousePressX = x
