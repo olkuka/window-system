@@ -205,7 +205,7 @@ class WindowSystem(GraphicsEventSystem):
         pointedWindow = self.screen.childWindows[-1]
         if type(pointedWindow) is Calculator:
             print(char)
-            pointedWindow.key_pressed(char)
+            pointedWindow.keyPressed(char)
             self.requestRepaint()
 
 # Let's start your window system!
