@@ -25,44 +25,60 @@ class Container(Widget):
         self.spacing = spacing
 
     def addChildWindow(self, window):
+        """
+        Adds window to its parent window children list and layouts the children properly. 
+        """
         super().addChildWindow(window)
         self.layoutChildren()
 
     def removeFromParentWindow(self):
+        """
+        Removes window from its parent window children list and layouts the children properly. 
+        """
         super().removeFromParentWindow()
         self.layoutChildren()
 
     def layoutChildren(self):
+        """
+        Arranges the child windows within the container based on the specified axis and spacing.
+        """
         numChildren = len(self.childWindows)
         if numChildren == 0:
             return
-        
+
         totalSpacing = self.spacing * (numChildren - 1)
 
         if self.axis == 'horizontal':
+            # calculate the minimum width and height of the container
             self.minWidth = MIN_WINDOW_WIDTH*numChildren
             self.minHeight = MIN_WINDOW_HEIGHT
             if self.width < totalSpacing:
-                return  # Not enough space to distribute equally
+                return  # not enough space to distribute equally
             for i, child in enumerate(self.childWindows):
+                # distribute the width equally among the children
                 child.width = (self.width - totalSpacing) // numChildren
                 child.height = self.height
                 child.x = i * (child.width + self.spacing)
                 child.y = 0
 
         elif self.axis == 'vertical':
+            # calculate the minimum width and height of the container
             self.minWidth = MIN_WINDOW_WIDTH
             self.minHeight = MIN_WINDOW_HEIGHT*numChildren
             # spaces between children, on the top and on the bottom
             if self.height < totalSpacing:
-                return  # Not enough space to distribute equally
+                return  # not enough space to distribute equally
             for i, child in enumerate(self.childWindows):
+                # distribute the height equally among the children
                 child.width = self.width
                 child.height = (self.height - totalSpacing) // numChildren
                 child.x = 0
                 child.y = i * (child.height + self.spacing)
 
     def resize(self, x, y, width, height):
+        """
+        Resizes the container and adjusts the size and position of the child windows accordingly.
+        """
         numChildren = len(self.childWindows)
         if numChildren == 0:
             return
@@ -79,24 +95,20 @@ class Container(Widget):
 
         if self.axis == 'horizontal':
             for i, child in enumerate(self.childWindows):
-                child.resize(child.x ,child.y,self.width,child.height)
-                child.width = (self.width  - totalSpacing) // numChildren
+                child.resize(child.x, child.y, self.width, child.height)
+                child.width = (self.width - totalSpacing) // numChildren
                 child.height = self.height + dh
                 child.x = i * (child.width + self.spacing)
                 child.y = 0
-                
-                
 
         elif self.axis == 'vertical':
             for i, child in enumerate(self.childWindows):
-                child.resize(child.x ,child.y,child.width,child.height)
+                child.resize(child.x, child.y, child.width, child.height)
                 child.width = self.width + dw
                 child.height = (self.height - totalSpacing) // numChildren
                 child.x = 0
                 child.y = i * (child.height + self.spacing)
-               
-                
-        
+
 
 class Label(Widget):
     def __init__(self, originX, originY, width, height, identifier, text, backgroundColor):
@@ -108,8 +120,11 @@ class Label(Widget):
         self.textColor = COLOR_BLACK
 
     def draw(self, ctx):
+        """
+        Draws the label.
+        """
         super().draw(ctx)
-        ctx.setFont(None)
+        ctx.setFont(None)   # reset the font
         ctx.setStrokeColor(self.textColor)
         ctx.drawString(self.text, (self.width-len(self.text)*7) /
                        2, (self.height-14)/2)
@@ -123,6 +138,9 @@ class Button(Label):
         self.BtnState = BtnState.Normal
 
     def draw(self, ctx):
+        """
+        Draws the button.
+        """
         if self.BtnState == BtnState.Normal:
             self.backgroundColor = self.normalColor
         if self.BtnState == BtnState.Hovering:
@@ -146,7 +164,7 @@ class Button(Label):
         ctx.drawLine(0, self.height, self.width, self.height)
 
 
-# Using enum class to define the possible states of a button widget.
+# use enum class to define the possible states of a button element
 class BtnState(enum.Enum):
     Normal = 1
     Hovering = 2
@@ -158,37 +176,41 @@ class Slider(Widget):
         super().__init__(originX, originY, width, height, identifier)
         self.backgroundColor = backgroundColor
 
-        self.isHandlePressed = False  # if the slider is currently pressed
-        self.handleX = min(6, self.width)  # handle X coordinate
-        self.handleY = min(6, self.height)  # handle Y coordinate
+        self.isHandlePressed = False    # incicates if the slider is currently pressed
+        self.handleX = min(6, self.width)
+        self.handleY = min(6, self.height)
         self.handleWidth = self.width/6
         self.handleHeight = self.height/2
-        
-        # inner rectangle
+
+        # inner rectangle properties
         self.innerX1 = 5
         self.innerY1 = 5
+        self.innerX2 = max(self.innerX1, self.width - self.innerX1)
+        self.innerY2 = max(self.innerY1, self.innerY1 + self.handleHeight)
 
-        self.value = 0  # sliders value
-    
-    def resize(self, x,y,width,height):
-        
-        position = self.innerX1+self.value*(self.innerX2-self.innerX1) - self.handleWidth
-        position = min(position,self.innerX1)
-        position = max(position,self.innerX1+(self.innerX2-self.innerX1))
-            
+        self.value = 0  # slider value
+
+    def resize(self, x, y, width, height):
+        """
+        Overrides the window resize method and sets handle coordinates and inner rectangle coordinates properly.
+        """
+        position = self.innerX1 + self.value * \
+            (self.innerX2 - self.innerX1) - self.handleWidth
+        position = min(position, self.innerX1)
+        position = max(position, self.innerX1 + self.innerX2 - self.innerX1)
+
         self.handleX = position
-        
-    
-    def draw(self, ctx):
-        # draw the background
-        super().draw(ctx)
-
-        # these properties that have to be set here because they depend on width/height and
-        # they have to change their values every time user resizes the window
         self.handleWidth = self.width//6
         self.handleHeight = self.height//2
         self.innerX2 = max(self.innerX1, self.width - self.innerX1)
         self.innerY2 = max(self.innerY1, self.innerY1 + self.handleHeight)
+
+    def draw(self, ctx):
+        """
+        Draws the whole slider (outer rectangle, inner rectangle and a handle).
+        """
+        # draw the background
+        super().draw(ctx)
 
         # draw the inner rectangle and its borders
         ctx.setFillColor('#CECECE')
@@ -200,40 +222,45 @@ class Slider(Widget):
         ctx.drawLine(self.innerX1, self.innerY2, self.innerX2, self.innerY2)
         ctx.drawLine(self.innerX2, self.innerY1, self.innerX2, self.innerY2)
 
-        # draw the handle and its borders
+        # choose the correct handle color based on a property 'isHandlePressed'
         if self.isHandlePressed:
             ctx.setFillColor(COLOR_DARK_BLUE)
         else:
             ctx.setFillColor(COLOR_WHITE)
 
-
-        position = self.innerX1+self.value*(self.innerX2-self.innerX1) - self.handleWidth
-        if position < self.innerX1 :
+        # prevent the handle from drawing outside the inner rectangle borders
+        position = self.innerX1 + self.value * \
+            (self.innerX2-self.innerX1) - self.handleWidth
+        if position < self.innerX1:
             position = self.innerX1
-        elif position > self.innerX1+(self.innerX2-self.innerX1):
-            position = self.innerX1+(self.innerX2-self.innerX1)
+        elif position > self.innerX1 + self.innerX2 - self.innerX1:
+            position = self.innerX1 + self.innerX2 - self.innerX1
         self.handleX = position
 
         ctx.fillRect(self.handleX, self.handleY, self.handleX +
-                    self.handleWidth, self.handleY + self.handleHeight)
+                     self.handleWidth, self.handleY + self.handleHeight)
 
-    # check if x and y coordinates are on the slider's handle
     def checkHandlePressed(self, x, y):
+        """
+        Checks if x and y coordinates are within the slider's handle.
+        """
         return 0 <= x - self.handleX <= self.handleWidth and 0 <= y - self.handleY <= self.height
 
     def slideHandle(self, newX):
-        # check if the new X coordinate is within the inner rectangle
+        """
+        Checks if x is within the inner rectangle and assigns new x coordinate. Changes isHandlePressed property accordingly.
+        """
         if self.innerX1 <= newX <= self.innerX2:
             self.isHandlePressed = True
-            
-            #prevent handle from going out
-            newX = min(newX,self.innerX2 - self.handleWidth)
-            
+
+            # prevent handle from going out
+            newX = min(newX, self.innerX2 - self.handleWidth)
+
             # assign new X coordinate
             self.handleX = newX
             # update slider's value based on a current handle position
             self.value = (self.handleX - self.innerX1) / \
                 (self.innerX2 - self.innerX1 - self.handleWidth)
-            
+
         else:
             self.isHandlePressed = False

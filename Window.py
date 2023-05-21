@@ -10,7 +10,7 @@ from GraphicsEventSystem import *
 from WindowManager import *
 from collections import namedtuple
 
-AllAnchors = namedtuple('AllAnchors', "top right bottom left")
+AllAnchors = namedtuple('AllAnchors', 'top right bottom left')
 LayoutAnchor = AllAnchors(1 << 0, 1 << 1, 1 << 2, 1 << 3)
 MIN_WINDOW_WIDTH = 5
 MIN_WINDOW_HEIGHT = 5
@@ -28,15 +28,19 @@ class Window:
         self.childWindows = []
         self.parentWindow = None
 
-        self.isHidden = False
-        self.taskbarIconX = None
+        self.isHidden = False   # indicates if window is currently minimized
+        self.taskbarIconX = None    # position of the window icon on the taskbar
+        # indicates if decorations should be added to this window (default: True)
         self.addDecorations = True
 
-        self.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left
-        self.minWidth = width
-        self.minHeight = height
+        self.layoutAnchors = LayoutAnchor.top | LayoutAnchor.left   # default anchors
+        self.minWidth = width   # minimum window width (for resizing)
+        self.minHeight = height  # minimum window height (for resizing)
 
     def resize(self, x, y, width, height):
+        """
+        Resizes the window.
+        """
         # apply minimum size constraints
         width = max(width, self.minWidth)
         height = max(height, self.minHeight)
@@ -54,17 +58,17 @@ class Window:
         for child in self.childWindows:
             # left anchor
             if child.layoutAnchors & LayoutAnchor.left:
-                # if not top-left or bottom-left corner
+                # if not top-left or bottom-left
                 if not child.layoutAnchors & LayoutAnchor.top and not child.layoutAnchors & LayoutAnchor.bottom:
                     # change child y coordinate to move along with a vertical axis
-                    child.y = child.y - dh
+                    child.y += dh
 
             # right anchor
             if child.layoutAnchors & LayoutAnchor.right:
-                # if not top-right or bottom-right corner
+                # if not top-right or bottom-right
                 if not child.layoutAnchors & LayoutAnchor.top and not child.layoutAnchors & LayoutAnchor.bottom:
                     # change child y coordinate to move along with a vertical axis
-                    child.y = child.y + dh
+                    child.y += dh
                 # change child x coordinate to move along with the right window margin
                 child.x += dw
 
@@ -87,83 +91,89 @@ class Window:
                 child.width += dw
                 child.height += dh
                 # ensure that window coordinates changes when the width is changed
-                child.x = child.x - dw
-                child.y = child.y - dh
+                child.x -= dw
+                child.y -= dh
 
+            # recursively resize children
             child.resize(child.x, child.y, child.width, child.height)
 
-
     def addChildWindow(self, window):
-        # add window to the end of childWindows list
+        """
+        Adds window to its parent window children list (at the end) and sets its parent. 
+        """
         self.childWindows.append(window)
-        # assign window parent
         window.parentWindow = self
 
     def removeFromParentWindow(self):
-        # remove window from the childWindows list
+        """
+        Removes window from its parent window.
+        """
         self.parentWindow.childWindows.remove(self)
-        # set window parent to None
         self.parentWindow = None
 
     def childWindowAtLocation(self, x, y):
-        # check if the current window contains the provided point
-        if self.hitTest(x, y):
-            # search for child windows in reverse order (topmost to bottommost)
+        """
+        Returns the top-most child window if there exists any. 
+        """
+        if self.hitTest(x, y):  # check if the current window contains the provided point
+            # search for child windows in a reverse order (top-most to bottom-most)
             for child in reversed(self.childWindows):
                 # convert the local coordinates to the child window's coordinate system
                 childX = x - child.x
                 childY = y - child.y
                 # recursively check child windows
                 result = child.childWindowAtLocation(childX, childY)
-                # return the topmost child window found
                 if result:
-                    return result
-            # if no child window is found, return the current window
-            return self
-        else:
-            return None
+                    return result   # return the top-most child window found
+            return self  # if no child window is found, return the current window
+        return None
 
     def hitTest(self, x, y):
-        # if x and y are in a local coordinate system
-        # it's sufficient to check if x and y are within bounds
-        # [0, width] and [0, height] of the current window
+        """
+        Checks if the window was hit.
+        """
+        # check if x and y are within bounds [0, width] and [0, height] of the current window
         return 0 <= x <= self.width and 0 <= y <= self.height
 
     def hitTestDecoration(self, x, y):
-        # the given x, y are in a local corrdinate system
-        # check if x and y are within its decoration bounds
-        # A window that has a decoration should be a Top-level window
-        if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1":
+        """
+        Checks if the window decoration was hit.
+        """
+        if self.parentWindow and self.parentWindow.identifier == 'SCREEN_1':     # a window that has a decoration should be a top-level window
             return 0 <= x <= self.width and 0 <= y <= self.parentWindow.windowSystem.windowManager.titleBarHeight
 
     def hitTestTitleBar(self, x, y):
-        # the given x, y are in a local corrdinate system
-        # check if x and y are within title bar
-        # A window that has a decoration should be a Top-level window
-        if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1":
+        """
+        Checks if the title bar was hit.
+        """
+        if self.parentWindow and self.parentWindow.identifier == 'SCREEN_1':    # a window that has a decoration should be a top-level window
             return 0 <= x <= self.width and 0 <= y <= self.parentWindow.windowSystem.windowManager.titleBarHeight
 
     def hitTestResizeArea(self, x, y):
-        # the given x, y are in a local corrdinate system
-        # check if x and y are within resize area
-        # A window that has a decoration should be a Top-level window
-        if self.parentWindow != None and self.parentWindow.identifier == "SCREEN_1":
+        """
+        Checks if the resize was hit.
+        """
+        if self.parentWindow and self.parentWindow.identifier == 'SCREEN_1':    # a window that has a decoration should be a top-level window
             return self.width - 10 <= x <= self.width and self.height - 10 <= y <= self.height
 
     def convertPositionToScreen(self, x, y):
-        localX = x
-        localY = y
+        """
+        Converts coordinates from local to global.
+        """
         # if this window has no parent, it is already at global screen coordinates
         if not self.parentWindow:
-            return localX, localY
+            return x, y
 
         # if this window has a parent, recursively convert local coordinates to screen coordinates
         else:
-            parentX = localX + self.x
-            parentY = localY + self.y
+            parentX = x + self.x
+            parentY = y + self.y
             return self.parentWindow.convertPositionToScreen(parentX, parentY)
 
     def convertPositionFromScreen(self, x, y):
+        """
+        Converts coordinates from global to local.
+        """
         # if this window has no parent, return its coordinates as they are
         if not self.parentWindow:
             return (x, y)
@@ -175,23 +185,25 @@ class Window:
             return self.parentWindow.convertPositionFromScreen(localX, localY)
 
     def draw(self, ctx):
-        # set to draw with the window's background color
-        ctx.setFillColor(self.backgroundColor)
+        """
+        Draws the plain window.
+        """
+        ctx.setFillColor(
+            self.backgroundColor)  # draw with the window's background color
 
-        # Check if the window has a parent
-        if self.parentWindow:
-            # Convert the window's local origin to global coordinates
+        if self.parentWindow:   # check if the window has a parent
+            # convert the window's local origin to global coordinates
             screenX, screenY = self.parentWindow.convertPositionToScreen(
                 self.x, self.y)
         else:
-            # If the window has no parent, its origin is already in global coordinates
+            # if the window has no parent, its origin is already in global coordinates
             screenX = self.x
             screenY = self.y
 
-        # Set the graphics context's origin to the global coordinates
+        # set the origin to the global coordinates
         ctx.setOrigin(screenX, screenY)
 
-        # Draw a filled rectangle in the window's local coordinate system
+        # draw a filled rectangle in the window's local coordinate system
         ctx.fillRect(0, 0, self.width, self.height)
 
         # draw every child window
@@ -199,15 +211,18 @@ class Window:
             child.draw(ctx)
 
     def handleMouseClicked(self, x, y):
-        print("Window " + self.identifier + " was clicked.")
+        print('Window ' + self.identifier + ' was clicked.')
 
 
 class Screen(Window):
     def __init__(self, windowSystem):
-        super().__init__(0, 0, windowSystem.width, windowSystem.height, "SCREEN_1")
+        super().__init__(0, 0, windowSystem.width, windowSystem.height, 'SCREEN_1')
         self.windowSystem = windowSystem
 
     def draw(self, ctx):
+        """
+        Draws the desktop (with wallpaper), taskbar and screen children.
+        """
         # draw wallpaper and task bar
         self.windowSystem.windowManager.drawDesktop(ctx)
         self.windowSystem.windowManager.drawTaskbar(ctx)
@@ -220,10 +235,14 @@ class Screen(Window):
                     self.windowSystem.windowManager.decorateWindow(child, ctx)
 
     def windowDecorationAtLocation(self, x, y):
+        """
+        Checks if there exist a decoration at a given location.
+        """
         for child in reversed(self.childWindows):
             localX, localY = child.convertPositionFromScreen(x, y)
-            if child.hitTestTitleBar(localX, localY):
+            if child.hitTestTitleBar(localX, localY):   # if there is a title bar
                 return child, False
+            # if there is a resize indicator
             elif child.hitTestResizeArea(localX, localY):
                 return child, True
 
