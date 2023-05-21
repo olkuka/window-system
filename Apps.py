@@ -42,7 +42,9 @@ class HelloWorld(Widget):
         self.addChildWindow(self.quitBtn)
 
     def clickLanguageBtn(self, text):
-        # update the greeting text based on the selected language
+        """
+        Updates the greeting text based on the selected language.
+        """
         self.greetingText.text = text
 
 
@@ -94,9 +96,15 @@ class Calculator(Widget):
         self.addChildWindow(self.container)
 
     def buttonClicked(self, text):
+        """
+        Processes the input when a button is clicked.
+        """
         self.processInput(text)
 
     def keyPressed(self, key):
+        """
+        Processes the input when a keyboard is pressed.
+        """
         if key == '':
             key = '='   # clear the input
 
@@ -104,6 +112,9 @@ class Calculator(Widget):
             self.processInput(key)
 
     def processInput(self, key):
+        """
+        Processes the input.
+        """
         if key == 'C':
             self.currentInput = ''
 
@@ -138,6 +149,9 @@ class Colors(Widget):
         self.addComponents()
 
     def addComponents(self):
+        """
+        Adds elements to the application window.
+        """
         # create sliders for each color channel
         self.sliderR = Slider(0, 0, self.width, 50, 'SliderR', COLOR_RED)
         self.sliderG = Slider(0, 0, self.width, 50, 'SliderG', COLOR_GREEN)
@@ -160,10 +174,15 @@ class Colors(Widget):
         self.container.addChildWindow(self.colorText)
 
     def mapFromRgbToHex(self):
-        # convert RGB values to hexadecimal representation
+        """
+        Converts RGB values to hexadecimal representation.
+        """
         return '#{:02x}{:02x}{:02x}'.format(int(self.sliderR.value*255), int(self.sliderG.value*255), int(self.sliderB.value*255))
 
     def draw(self, ctx):
+        """
+        Draws the application and manages the color change. 
+        """
         super().draw(ctx)
         self.color = self.mapFromRgbToHex()
         self.colorLabel.backgroundColor = self.color
@@ -197,6 +216,9 @@ class StartMenu(Window):
         self.addChildWindow(self.buttonExit)
 
     def onAppButtonClick(self, appName, screen):
+        """
+        Adds app to the screen children and closes the start menu.
+        """
         # add app to the screen's children
         screen.addChildWindow(appName(10, 10, 200, 300))
         # close the start menu by removing it from the parent window

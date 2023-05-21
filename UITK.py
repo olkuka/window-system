@@ -25,10 +25,16 @@ class Container(Widget):
         self.spacing = spacing
 
     def addChildWindow(self, window):
+        """
+        Adds window to its parent window children list and layouts the children properly. 
+        """
         super().addChildWindow(window)
         self.layoutChildren()
 
     def removeFromParentWindow(self):
+        """
+        Removes window from its parent window children list and layouts the children properly. 
+        """
         super().removeFromParentWindow()
         self.layoutChildren()
 
@@ -114,6 +120,9 @@ class Label(Widget):
         self.textColor = COLOR_BLACK
 
     def draw(self, ctx):
+        """
+        Draws the label.
+        """
         super().draw(ctx)
         ctx.setFont(None)   # reset the font
         ctx.setStrokeColor(self.textColor)
@@ -129,6 +138,9 @@ class Button(Label):
         self.BtnState = BtnState.Normal
 
     def draw(self, ctx):
+        """
+        Draws the button.
+        """
         if self.BtnState == BtnState.Normal:
             self.backgroundColor = self.normalColor
         if self.BtnState == BtnState.Hovering:
@@ -179,6 +191,9 @@ class Slider(Widget):
         self.value = 0  # slider value
     
     def resize(self, x, y, width, height):
+        """
+        Overrides the window resize method and sets handle coordinates and inner rectangle coordinates properly.
+        """
         position = self.innerX1 + self.value*(self.innerX2 - self.innerX1) - self.handleWidth
         position = min(position, self.innerX1)
         position = max(position, self.innerX1 + self.innerX2 - self.innerX1)
@@ -190,6 +205,9 @@ class Slider(Widget):
         self.innerY2 = max(self.innerY1, self.innerY1 + self.handleHeight)
     
     def draw(self, ctx):
+        """
+        Draws the whole slider (outer rectangle, inner rectangle and a handle).
+        """
         # draw the background
         super().draw(ctx)
 
@@ -220,12 +238,16 @@ class Slider(Widget):
         ctx.fillRect(self.handleX, self.handleY, self.handleX +
                     self.handleWidth, self.handleY + self.handleHeight)
 
-    # check if x and y coordinates are on the slider's handle
     def checkHandlePressed(self, x, y):
+        """
+        Checks if x and y coordinates are within the slider's handle.
+        """
         return 0 <= x - self.handleX <= self.handleWidth and 0 <= y - self.handleY <= self.height
 
     def slideHandle(self, newX):
-        # check if the new X coordinate is within the inner rectangle
+        """
+        Checks if x is within the inner rectangle and assigns new x coordinate. Changes isHandlePressed property accordingly.
+        """
         if self.innerX1 <= newX <= self.innerX2:
             self.isHandlePressed = True
             
